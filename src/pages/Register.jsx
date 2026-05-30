@@ -33,12 +33,42 @@ export default function Register() {
       setError('Los campos con * son obligatorios.');
       return;
     }
+
+    const regexNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+
+    if (!regexNombre.test(form.nombres)){
+      setError('Los nombres solo pueden contener letras.')
+      return;
+    }
+
+    if (!regexNombre.test(form.apellidos)){
+      setError('Los apellidos solo pueden contener letras.')
+      return;
+    }
+
+    const regexTelefono = /^9\d{8}$/;
+
+    if (form.telefono && !regexTelefono.test(form.telefono)){
+      setError('Ingrese un número de teléfono válido.')
+      return;
+    }
+
+    const edad = Number(form.edad);
+
+    if (form.edad && (edad < 15 || edad > 80)){
+      setError('La edad debe estar entre 15 y 80 años.')
+      return;
+    }
+
     if (form.contraseña !== form.confirmar) {
       setError('Las contraseñas no coinciden.');
       return;
     }
-    if (form.contraseña.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres.');
+
+    const regexPassword = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+    if (!regexPassword.test(form.contraseña)) {
+      setError('La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.');
       return;
     }
 
