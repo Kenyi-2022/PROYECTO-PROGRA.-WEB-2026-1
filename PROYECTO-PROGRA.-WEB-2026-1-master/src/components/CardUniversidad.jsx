@@ -1,4 +1,5 @@
 import { useState } from "react";
+import universidades from "../data/universidades";
 
 function CardUniversidad({ nombre, tipo, carreras, busqueda = "" }) {
   const texto = busqueda.toLowerCase().trim();
@@ -11,8 +12,12 @@ function CardUniversidad({ nombre, tipo, carreras, busqueda = "" }) {
     : false;
 
   const [mostrarCarreras, setMostrarCarreras] = useState(tieneCoincidenciaCarrera);
+  const [descripcionVisible, setDescripcionVisible] = useState({});
 
-  // ✅ Escape de caracteres especiales para evitar que RegExp explote
+  const toggleDescripcion = (index) => {
+    setDescripcionVisible(prev => ({ ...prev, [index]: !prev[index] }));
+  };
+
   const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
   const highlight = (str) => {
@@ -62,12 +67,48 @@ function CardUniversidad({ nombre, tipo, carreras, busqueda = "" }) {
                 key={index}
                 className={`border-b pb-2 ${coincide ? "bg-yellow-50 rounded px-2 border-yellow-200" : ""}`}
               >
-                <p className="font-semibold text-gray-800">
-                  {highlight(carrera.nombre)}
-                </p>
-                <p className="text-sm text-gray-500">
-                  Facultad de {highlight(carrera.facultad)}
-                </p>
+                <div className="flex justify-between">
+                  <div>
+                    <p className="font-semibold text-gray-800">
+                      {highlight(carrera.nombre)}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Facultad de {highlight(carrera.facultad)}
+                    </p>
+                  </div>
+
+                  <div className="text-end">
+                    <button
+                      disabled={!carrera.planEstudios}
+                      onClick={() => {
+                        const url = carrera.planEstudios.startsWith("http")
+                          ? carrera.planEstudios
+                          : window.location.origin + carrera.planEstudios;
+                        window.open(url, "_blank", "noopener,noreferrer");
+                      }}
+                      className={`px-3 py-1.5 rounded-lg text-sm transition m-1
+                        ${carrera.planEstudios
+                          ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+                          : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                        }`}
+                    >
+                      {carrera.planEstudios ? "Ver plan de estudio" : "Sin plan disponible"}
+                    </button>
+
+                    <button
+                      onClick={() => toggleDescripcion(index)}
+                      className="text-xs text-blue-500 hover:underline mt-1 block ml-auto"
+                    >
+                      {descripcionVisible[index] ? "Ocultar descripción ▲" : "Ver descripción ▼"}
+                    </button>
+
+                    {descripcionVisible[index] && (
+                      <p className="text-sm text-gray-600 mt-1 italic text-left">
+                        {carrera.descripcion}
+                      </p>
+                    )}
+                  </div>
+                </div>
               </div>
             );
           })}
