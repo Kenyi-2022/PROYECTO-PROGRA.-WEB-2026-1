@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import Navbar from '../components/navbar';
 import Footer from '../components/footer';
@@ -7,7 +7,13 @@ import Footer from '../components/footer';
 export default function Perfil() {
   const { user, logout } = useApp();
   const navigate = useNavigate();
-  const [tabActiva, setTabActiva] = useState('perfil');
+  const location = useLocation();
+
+  // Leer tab inicial desde URL si viene de favoritos
+  const params = new URLSearchParams(location.search);
+  const tabInicial = params.get("tab") || "perfil";
+
+  const [tabActiva, setTabActiva] = useState(tabInicial);
 
   if (!user) {
     return (
@@ -18,6 +24,12 @@ export default function Perfil() {
         </Link>
       </div>
     );
+  }
+
+  // Redirigir Admin a su panel
+  if (user.rol === "Admin") {
+    navigate('/admin');
+    return null;
   }
 
   const handleLogout = () => {
@@ -36,8 +48,8 @@ export default function Perfil() {
     : [
       { id: 'perfil', label: '👤 Mi Perfil' },
       { id: 'test', label: '🎯 Resultado Test' },
+      { id: 'actividad', label: '📋 Actividad' },
       { id: 'favoritos', label: '❤️ Favoritos' },
-      { id: 'actividad', label: '📊 Actividad' },
     ];
 
   return (
@@ -46,28 +58,39 @@ export default function Perfil() {
 
       <main className="flex-grow max-w-6xl mx-auto w-full px-4 py-8 space-y-6">
 
-        {/* Header del perfil */}
+        {/* ── Header del perfil ─────────────────────────── */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex flex-col sm:flex-row items-center sm:items-start gap-5">
           <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-3xl font-black shadow-md shrink-0">
             {user.nombres?.[0]}{user.apellidos?.[0]}
           </div>
           <div className="flex-1 text-center sm:text-left">
-            <h1 className="text-2xl font-black text-slate-900">{user.nombres} {user.apellidos}</h1>
+            <h1 className="text-2xl font-black text-slate-900">
+              {user.nombres} {user.apellidos}
+            </h1>
             <p className="text-slate-500 font-medium">{user.correo}</p>
             <span className={`inline-block mt-1 text-xs font-bold px-3 py-1 rounded-full ${esProfesor ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'
               }`}>
-              {user.rol} — Universidad de Lima
+              {user.rol}
             </span>
           </div>
-          <button
-            onClick={handleLogout}
-            className="bg-red-50 hover:bg-red-100 text-red-600 font-bold text-sm px-5 py-2.5 rounded-xl transition border border-red-200"
-          >
-            Cerrar sesión
-          </button>
+          <div className="flex flex-col gap-2 items-end">
+            {/* Botón Editar Perfil */}
+            <button
+              onClick={() => navigate('/EditarPerfil')}
+              className="bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold text-sm px-5 py-2.5 rounded-xl transition border border-blue-200 flex items-center gap-2"
+            >
+              ✏️ Editar Perfil
+            </button>
+            <button
+              onClick={handleLogout}
+              className="bg-red-50 hover:bg-red-100 text-red-600 font-bold text-sm px-5 py-2.5 rounded-xl transition border border-red-200"
+            >
+              Cerrar sesión
+            </button>
+          </div>
         </div>
 
-        {/* Tabs */}
+        {/* ── Tabs ──────────────────────────────────────── */}
         <div className="flex gap-2 bg-white rounded-2xl p-2 shadow-sm border border-slate-100 overflow-x-auto">
           {tabs.map(tab => (
             <button
@@ -83,7 +106,7 @@ export default function Perfil() {
           ))}
         </div>
 
-        {/* ======================== TAB: MI PERFIL ======================== */}
+        {/* ════════════ TAB: MI PERFIL ════════════ */}
         {tabActiva === 'perfil' && (
           <div className="grid md:grid-cols-2 gap-6">
 
@@ -101,7 +124,7 @@ export default function Perfil() {
                   { label: 'Edad', valor: user.edad ? `${user.edad} años` : 'No registrado' },
                   { label: 'Sexo', valor: user.sexo || 'No registrado' },
                   { label: 'Ciudad', valor: user.ciudad || 'No registrado' },
-                  ...(!esProfesor ? [{ label: 'Colegio de procedencia', valor: user.tipoColegio || 'No registrado' }] : [])
+                  ...(!esProfesor ? [{ label: 'Tipo de colegio', valor: user.tipoColegio || 'No registrado' }] : [])
                 ].map((item, i) => (
                   <div key={i} className="flex justify-between items-center py-2 border-b border-slate-50 last:border-0">
                     <span className="text-sm text-slate-500 font-medium">{item.label}</span>
@@ -124,7 +147,9 @@ export default function Perfil() {
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-slate-50">
                   <span className="text-sm text-slate-500 font-medium">Correo verificado</span>
-                  <span className="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Verificado ✓</span>
+                  <span className="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">
+                    Verificado ✓
+                  </span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-slate-50">
                   <span className="text-sm text-slate-500 font-medium">Último ingreso</span>
@@ -137,14 +162,17 @@ export default function Perfil() {
                 </div>
               </div>
 
-              <button onClick={() => navigate('/EditarPerfil')} className="w-full mt-4 border border-slate-200 hover:bg-slate-50 text-slate-600 font-bold text-sm px-4 py-2.5 rounded-xl transition">
-                ✏️ Editar información
+              <button
+                onClick={() => navigate('/EditarPerfil')}
+                className="w-full mt-2 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-600 font-bold text-sm px-4 py-2.5 rounded-xl transition flex items-center justify-center gap-2"
+              >
+                ✏️ Editar información de perfil
               </button>
             </div>
           </div>
         )}
 
-        {/* ======================== TAB ESTUDIANTE: RESULTADO TEST ======================== */}
+        {/* ════════════ TAB ESTUDIANTE: RESULTADO TEST ════════════ */}
         {tabActiva === 'test' && !esProfesor && (
           <div className="space-y-6">
             {user.carreraRecomendada ? (
@@ -155,7 +183,7 @@ export default function Perfil() {
                     Resultado de tu Test Vocacional
                   </h2>
                   <p className="text-sm text-slate-500 mb-4">
-                    Fecha: <strong className="text-blue-600">{user.fechaTest || 'Reciente'}</strong>
+                    Última vez realizado: <strong className="text-blue-600">{user.fechaTest || 'Reciente'}</strong>
                   </p>
 
                   <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl p-6 text-center mb-6">
@@ -163,13 +191,15 @@ export default function Perfil() {
                     <p className="text-2xl font-black">{user.carreraRecomendada}</p>
                   </div>
 
-                  {user.carrerasRecomendadas?.length > 0 && (
+                  {user.carrerasRecomendadas?.length > 1 && (
                     <div>
-                      <p className="font-bold text-slate-700 mb-3">Tus tres carreras recomendadas:</p>
+                      <p className="font-bold text-slate-700 mb-3">Historial de recomendaciones:</p>
                       <div className="space-y-2">
                         {user.carrerasRecomendadas.map((c, i) => (
                           <div key={i} className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
-                            <span className="w-7 h-7 bg-blue-600 text-white rounded-lg flex items-center justify-center text-xs font-black">{i + 1}</span>
+                            <span className="w-7 h-7 bg-blue-600 text-white rounded-lg flex items-center justify-center text-xs font-black">
+                              {i + 1}
+                            </span>
                             <span className="font-semibold text-slate-800">{c}</span>
                           </div>
                         ))}
@@ -179,8 +209,10 @@ export default function Perfil() {
                 </div>
 
                 <div className="text-center">
-                  <Link to="/test"
-                    className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-xl transition shadow-md">
+                  <Link
+                    to="/test"
+                    className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-xl transition shadow-md"
+                  >
                     🔄 Repetir el test vocacional
                   </Link>
                 </div>
@@ -189,9 +221,13 @@ export default function Perfil() {
               <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-12 text-center space-y-4">
                 <p className="text-5xl">📋</p>
                 <h3 className="text-xl font-black text-slate-800">Aún no has hecho el test</h3>
-                <p className="text-slate-500">Completa el test vocacional para descubrir qué carrera es ideal para ti.</p>
-                <Link to="/test"
-                  className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3 rounded-xl transition mt-2">
+                <p className="text-slate-500">
+                  Completa el test vocacional para descubrir qué carrera es ideal para ti.
+                </p>
+                <Link
+                  to="/test"
+                  className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3 rounded-xl transition mt-2"
+                >
                   🚀 Iniciar Test Vocacional
                 </Link>
               </div>
@@ -199,7 +235,80 @@ export default function Perfil() {
           </div>
         )}
 
-        {/* ======================== TAB ESTUDIANTE: FAVORITOS ======================== */}
+        {/* ════════════ TAB ESTUDIANTE: ACTIVIDAD ════════════ */}
+        {tabActiva === 'actividad' && !esProfesor && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+              <h2 className="text-lg font-black text-slate-900 mb-5 flex items-center gap-2">
+                <span className="bg-amber-100 text-amber-600 p-2 rounded-xl">📋</span>
+                Historial de Tests Vocacionales
+              </h2>
+
+              {user.historialTests && user.historialTests.length > 0 ? (
+                <div className="space-y-3">
+                  {user.historialTests.map((t, i) => (
+                    <div
+                      key={i}
+                      className={`flex items-center justify-between p-4 rounded-xl border ${i === 0
+                          ? "bg-blue-50 border-blue-200"
+                          : "bg-slate-50 border-slate-100"
+                        }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black ${i === 0
+                            ? "bg-blue-600 text-white"
+                            : "bg-slate-200 text-slate-600"
+                          }`}>
+                          {i === 0 ? "★" : i + 1}
+                        </div>
+                        <div>
+                          <p className={`font-bold text-sm ${i === 0 ? "text-blue-800" : "text-slate-800"}`}>
+                            {t.resultado}
+                          </p>
+                          <p className="text-xs text-slate-400">{t.fecha}</p>
+                        </div>
+                      </div>
+                      {i === 0 && (
+                        <span className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                          Último resultado
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-10 text-slate-400 space-y-3">
+                  <p className="text-4xl">📋</p>
+                  <p className="font-medium">No tienes actividad registrada aún.</p>
+                  <Link
+                    to="/test"
+                    className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2.5 rounded-xl transition text-sm mt-2"
+                  >
+                    🚀 Hacer el test vocacional
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Estadísticas rápidas */}
+            {user.historialTests && user.historialTests.length > 0 && (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 text-center">
+                  <p className="text-3xl font-black text-blue-600">{user.historialTests.length}</p>
+                  <p className="text-xs text-slate-500 font-medium mt-1">Tests realizados</p>
+                </div>
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 text-center">
+                  <p className="text-3xl font-black text-red-500">
+                    {user.universidadesFavoritas?.length || 0}
+                  </p>
+                  <p className="text-xs text-slate-500 font-medium mt-1">Universidades favoritas</p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ════════════ TAB ESTUDIANTE: FAVORITOS ════════════ */}
         {tabActiva === 'favoritos' && !esProfesor && (
           <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
             <h2 className="text-lg font-black text-slate-900 mb-4 flex items-center gap-2">
@@ -208,24 +317,46 @@ export default function Perfil() {
             </h2>
 
             {user.universidadesFavoritas?.length > 0 ? (
-              <div className="space-y-3">
-                {user.universidadesFavoritas.map((uni, i) => (
-                  <div key={i} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 font-black text-sm">
-                        {uni[0]}
+              <>
+                <p className="text-sm text-slate-400 mb-4">
+                  {user.universidadesFavoritas.length} universidad{user.universidadesFavoritas.length > 1 ? "es" : ""} guardada{user.universidadesFavoritas.length > 1 ? "s" : ""}
+                </p>
+                <div className="space-y-3">
+                  {user.universidadesFavoritas.map((uni, i) => (
+                    <div key={i} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100 hover:bg-red-50 hover:border-red-100 transition-colors">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 font-black text-sm">
+                          {uni[0]}
+                        </div>
+                        <span className="font-semibold text-slate-800">{uni}</span>
                       </div>
-                      <span className="font-semibold text-slate-800">{uni}</span>
+                      <div className="flex items-center gap-3">
+                        <Link
+                          to={`/directorio?q=${encodeURIComponent(uni)}`}
+                          className="text-blue-500 text-xs font-bold hover:underline"
+                        >
+                          Ver →
+                        </Link>
+                        <span className="text-red-400 text-lg">❤️</span>
+                      </div>
                     </div>
-                    <span className="text-red-500 text-lg">❤️</span>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+                <div className="mt-5 pt-5 border-t border-slate-100 text-center">
+                  <Link to="/directorio" className="text-blue-600 font-bold text-sm hover:underline">
+                    Explorar más universidades →
+                  </Link>
+                </div>
+              </>
             ) : (
-              <div className="text-center py-12 text-slate-400 space-y-2">
+              <div className="text-center py-12 text-slate-400 space-y-3">
                 <p className="text-4xl">🏫</p>
-                <p className="font-medium">No tienes universidades favoritas aún.</p>
-                <Link to="/directorio" className="text-blue-600 font-bold hover:underline text-sm">
+                <p className="font-medium text-slate-500">No tienes universidades favoritas aún.</p>
+                <p className="text-sm">Explora el directorio y guarda las que más te interesen.</p>
+                <Link
+                  to="/directorio"
+                  className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2.5 rounded-xl transition text-sm mt-2"
+                >
                   Explorar el directorio →
                 </Link>
               </div>
@@ -233,56 +364,7 @@ export default function Perfil() {
           </div>
         )}
 
-        {/* ======================== TAB ESTUDIANTE: ACTIVIDAD ======================== */}
-        {tabActiva === 'actividad' && !esProfesor && (
-
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-
-            <h2 className="text-lg font-black text-slate-900 mb-6">
-              📊 Historial de Actividad
-            </h2>
-
-            {(user.actividad || []).length > 0 ? (
-
-              <div className="space-y-4">
-
-                {user.actividad.map((item, index) => (
-
-                  <div
-                    key={index}
-                    className="border rounded-xl p-4 bg-slate-50"
-                  >
-
-                    <p className="font-bold">
-                      {item.tipo}
-                    </p>
-
-                    <p>
-                      Resultado:
-                      <span className="font-semibold text-blue-600 ml-2">
-                        {item.resultado}
-                      </span>
-                    </p>
-
-                    <p className="text-sm text-slate-500">
-                      {item.fecha}
-                    </p>
-
-                  </div>
-                ))}
-              </div>
-
-            ) : (
-
-              <p className="text-slate-500">
-                No hay actividad registrada.
-              </p>
-
-            )}
-          </div>
-        )}
-
-        {/* ======================== TAB PROFESOR: ACTIVIDAD ======================== */}
+        {/* ════════════ TAB PROFESOR: ACTIVIDAD ════════════ */}
         {tabActiva === 'actividad' && esProfesor && (
           <div className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -299,18 +381,10 @@ export default function Perfil() {
                 </div>
               ))}
             </div>
-
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-              <h2 className="text-lg font-black text-slate-900 mb-4">📅 Resumen de actividad — Este año</h2>
-              <div className="text-center py-8 text-slate-400">
-                <p className="text-4xl mb-2">📊</p>
-                <p className="font-medium">Gráficos de actividad próximamente</p>
-              </div>
-            </div>
           </div>
         )}
 
-        {/* ======================== TAB PROFESOR: INFO PROFESIONAL ======================== */}
+        {/* ════════════ TAB PROFESOR: INFO PROFESIONAL ════════════ */}
         {tabActiva === 'profesional' && esProfesor && (
           <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 space-y-4">
             <h2 className="text-lg font-black text-slate-900 flex items-center gap-2">
@@ -324,7 +398,6 @@ export default function Perfil() {
                 { label: 'Años de experiencia', valor: user.aniosExperiencia || '—' },
                 { label: 'Estado de cuenta', valor: user.estadoCuenta || 'Activo' },
                 { label: 'Universidad', valor: 'Universidad de Lima' },
-                { label: 'Facultad', valor: 'Ingeniería de Sistemas' },
               ].map((item, i) => (
                 <div key={i} className="flex justify-between items-center py-3 border-b border-slate-50 last:border-0">
                   <span className="text-sm text-slate-500 font-medium">{item.label}</span>

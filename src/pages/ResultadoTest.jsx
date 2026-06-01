@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import Navbar from '../components/navbar';
@@ -105,15 +105,23 @@ const equivalenciasCarreras = {
 
 const ResultadoTest = () => {
   const navigate = useNavigate();
-  const { carreraTemporal } = useApp();
+  // ✅ Extraemos también guardarResultadoTest del Contexto
+  const { carreraTemporal, guardarResultadoTest } = useApp();
 
-  // ✅ SOLUCIÓN: leer inmediatamente, sin useEffect
-  // Prioridad: contexto > localStorage > valor por defecto
   const [carreraFinal] = useState(() => {
-    return carreraTemporal 
-      || localStorage.getItem('carreraTemporal') 
+    return carreraTemporal
+      || localStorage.getItem('carreraTemporal')
       || "Ingeniería de Sistemas y Computación";
   });
+
+  //Este useEffect se ejecuta automáticamente una vez al cargar la página.
+  // Guarda el resultado en el perfil del usuario y lo envía a la sala del Administrador si es que hay una.
+  useEffect(() => {
+    if (carreraFinal) {
+      guardarResultadoTest(carreraFinal);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const universidadesRecomendadas = equivalenciasCarreras[carreraFinal] || [];
 
@@ -151,17 +159,15 @@ const ResultadoTest = () => {
             universidadesRecomendadas.map((uni, idx) => (
               <div
                 key={idx}
-                className={`bg-white rounded-xl shadow-sm p-5 border transition-all ${
-                  uni.destacado ? 'border-blue-400 ring-2 ring-blue-100' : 'border-gray-200'
-                }`}
+                className={`bg-white rounded-xl shadow-sm p-5 border transition-all ${uni.destacado ? 'border-blue-400 ring-2 ring-blue-100' : 'border-gray-200'
+                  }`}
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
                       <h3 className="text-lg font-bold text-gray-900">{uni.universidad}</h3>
-                      <span className={`text-xs px-2 py-0.5 rounded-md font-medium ${
-                        uni.tipo === 'Privada' ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700'
-                      }`}>
+                      <span className={`text-xs px-2 py-0.5 rounded-md font-medium ${uni.tipo === 'Privada' ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700'
+                        }`}>
                         {uni.tipo}
                       </span>
                       {uni.destacado && (
