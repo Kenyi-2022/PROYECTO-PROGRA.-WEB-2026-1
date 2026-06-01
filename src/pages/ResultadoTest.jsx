@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import Navbar from '../components/navbar';
@@ -105,15 +105,23 @@ const equivalenciasCarreras = {
 
 const ResultadoTest = () => {
   const navigate = useNavigate();
-  const { carreraTemporal } = useApp();
+  // ✅ Extraemos también guardarResultadoTest del Contexto
+  const { carreraTemporal, guardarResultadoTest } = useApp();
 
-  // ✅ SOLUCIÓN: leer inmediatamente, sin useEffect
-  // Prioridad: contexto > localStorage > valor por defecto
   const [carreraFinal] = useState(() => {
     return carreraTemporal 
       || localStorage.getItem('carreraTemporal') 
       || "Ingeniería de Sistemas y Computación";
   });
+
+  //Este useEffect se ejecuta automáticamente una vez al cargar la página.
+  // Guarda el resultado en el perfil del usuario y lo envía a la sala del Administrador si es que hay una.
+  useEffect(() => {
+    if (carreraFinal) {
+      guardarResultadoTest(carreraFinal);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const universidadesRecomendadas = equivalenciasCarreras[carreraFinal] || [];
 

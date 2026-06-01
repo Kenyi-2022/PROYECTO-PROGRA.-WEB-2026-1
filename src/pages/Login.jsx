@@ -25,7 +25,12 @@ export default function Login() {
       const resultado = login(correo, contrasena);
       setCargando(false);
       if (resultado.ok) {
-        navigate('/perfil');
+        // Redirigir según el rol
+        if (resultado.rol === "Admin") {
+          navigate('/admin');
+        } else {
+          navigate('/perfil');
+        }
       } else {
         setError('Correo o contraseña incorrectos.');
       }
@@ -56,14 +61,34 @@ export default function Login() {
 
           {/* Credenciales demo */}
           <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 space-y-1">
-            <p className="text-xs font-bold text-blue-700 uppercase tracking-wider mb-2">Cuentas de prueba ULima</p>
-            <p className="text-xs text-blue-600">👨‍🎓 Estudiante: <span className="font-mono font-bold">estudiante@ulima.edu.pe</span> / <span className="font-mono font-bold">ulima123</span></p>
-            <p className="text-xs text-blue-600">👨‍🏫 Profesor: <span className="font-mono font-bold">profesor@ulima.edu.pe</span> / <span className="font-mono font-bold">profe123</span></p>
+            <p className="text-xs font-bold text-blue-700 uppercase tracking-wider mb-2">
+              Cuentas de prueba
+            </p>
+            <p className="text-xs text-blue-600">
+              👨‍🎓 Estudiante:{" "}
+              <span className="font-mono font-bold">estudiante@ulima.edu.pe</span>{" "}
+              /{" "}
+              <span className="font-mono font-bold">ulima123</span>
+            </p>
+            <p className="text-xs text-blue-600">
+              👨‍🏫 Profesor:{" "}
+              <span className="font-mono font-bold">profesor@ulima.edu.pe</span>{" "}
+              /{" "}
+              <span className="font-mono font-bold">profe123</span>
+            </p>
+            <p className="text-xs text-purple-700 font-semibold">
+              🛡️ Admin:{" "}
+              <span className="font-mono">admin@vocatest.pe</span>{" "}
+              /{" "}
+              <span className="font-mono">admin123</span>
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-1">Correo institucional</label>
+              <label className="block text-sm font-bold text-slate-700 mb-1">
+                Correo electrónico
+              </label>
               <input
                 type="email"
                 value={correo}
@@ -74,7 +99,9 @@ export default function Login() {
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-1">Contraseña</label>
+              <label className="block text-sm font-bold text-slate-700 mb-1">
+                Contraseña
+              </label>
               <input
                 type="password"
                 value={contrasena}
