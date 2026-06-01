@@ -5,7 +5,8 @@ import Footer from '../components/footer';
 
 export default function TestVocacional() {
   const navigate = useNavigate();
-  const context = useApp();
+  // 1. Extraemos TODAS las funciones necesarias del contexto
+  const { setCarreraTemporal, guardarResultadoTest, buscarCarreraGlobal, user } = useApp();
 
   // Banco de 15 preguntas profesionales optimizadas
   const preguntas = [
@@ -210,7 +211,6 @@ export default function TestVocacional() {
     setIsLoading(true);
 
     try {
-      // Simulación controlada del tiempo de carga (2.2 segundos para excelente UX)
       await new Promise((resolve) => setTimeout(resolve, 2200));
 
       const conteo = listaRespuestas.reduce((acc, cat) => {
@@ -220,28 +220,39 @@ export default function TestVocacional() {
 
       const areaGanadora = Object.keys(conteo).reduce((a, b) => conteo[a] > conteo[b] ? a : b);
       
+      // 2. Mapeo completo de las carreras según la categoría ganadora
       const nombresMacroAreas = {
         Tecnologia: "Ingeniería de Sistemas y Computación",
-        Negocios_Finanzas: "Ingeniería Industrial / Gestión Logística",
-        Salud_Bienestar: "Ciencias de la Salud / Medicina"
+        Negocios_Finanzas: "Ingeniería Industrial",
+        Salud_Bienestar: "Medicina",
+        Humanidades_Leyes: "Derecho",
+        Diseno_Construccion: "Arquitectura"
       };
 
-      const resultadoFinal = nombresMacroAreas[areaGanadora] || "Ingeniería de Sistemas y Computación";
+      const carreraCalculada = nombresMacroAreas[areaGanadora] || "Ingeniería de Sistemas y Computación";
 
-      // Intentamos guardar de forma segura en tu contexto global.
-      // Si la función setCarreraTemporal no existe en tu AppContext, capturamos el aviso sin congelar el código.
-      try {
-        if (context && typeof context.setCarreraTemporal === 'function') {
-          context.setCarreraTemporal(resultadoFinal);
+      // 3. AQUÍ APLICAMOS LA BÚSQUEDA DINÁMICA
+      // Consultamos si la carrera existe en nuestra "base de datos" del Contexto
+      const infoCarrera = buscarCarreraGlobal(carreraCalculada);
+      
+      // Si el administrador añadió una universidad con esta carrera o ya existía, usamos su nombre exacto
+      const carreraFinalAAsignar = infoCarrera ? infoCarrera.nombre : carreraCalculada;
+
+      // 4. Lógica Inteligente de Guardado
+      if (user) {
+        // Si el usuario YA ESTÁ LOGUEADO, guardamos directamente en su historial y en la sala
+        if (typeof guardarResultadoTest === 'function') {
+          guardarResultadoTest(carreraFinalAAsignar);
         }
-      } catch (e) {
-        console.warn("Falta enlazar setCarreraTemporal en AppContext.");
+      } else {
+        // Si el usuario ES INVITADO (Aún no se registra), lo guardamos como carrera temporal
+        if (typeof setCarreraTemporal === 'function') {
+          setCarreraTemporal(carreraFinalAAsignar);
+        }
+        localStorage.setItem('carreraTemporal', carreraFinalAAsignar);
       }
       
-      // Respaldo de seguridad infalible para asegurar la carga asíncrona
-      localStorage.setItem('carreraTemporal', resultadoFinal);
-      
-      // Saltamos a la pantalla de resultados
+      // Finalmente, enviamos al usuario a ver sus resultados
       navigate('/resultado-test');
 
     } catch (error) {
@@ -260,7 +271,7 @@ export default function TestVocacional() {
           <div className="space-y-2">
             <h3 className="text-2xl font-black text-slate-900 animate-pulse">Procesando respuestas...</h3>
             <p className="text-sm text-slate-500 font-medium">
-              Nuestro algoritmo está cruzando tus intereses y aptitudes con el catálogo del directorio universitario peruano.
+              Nuestro algoritmo está cruzando tus intereses y aptitudes con el catálogo del directorio universitario.
             </p>
           </div>
         </div>

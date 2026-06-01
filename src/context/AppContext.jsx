@@ -169,7 +169,6 @@ export function AppProvider({ children }) {
   // ── LÓGICA DE SALAS CON PIN ──
   const crearSala = (nombreSala, codigoPersonalizado, pin) => {
     const codigo = codigoPersonalizado ? codigoPersonalizado.toUpperCase().trim() : Math.random().toString().slice(2, 10).toUpperCase();
-    // Guardamos el creador y el pin de seguridad
     const nuevaSala = { id: Date.now(), nombre: nombreSala, codigo, pin, resultados: [], activa: true, creador: user.correo };
     const nuevasSalas = [...salas, nuevaSala];
     setSalas(nuevasSalas);
@@ -212,11 +211,27 @@ export function AppProvider({ children }) {
     localStorage.setItem('vocatest_universidades', JSON.stringify(unisActualizadas));
   };
 
+  // ── NUEVA LÓGICA: BÚSQUEDA DINÁMICA DE CARRERAS ──
+  const buscarCarreraGlobal = (nombreCarrera) => {
+    for (const uni of universidades) {
+      if (uni.carreras) {
+        const encontrada = uni.carreras.find(c => 
+          c.nombre.toLowerCase().includes(nombreCarrera.toLowerCase())
+        );
+        if (encontrada) {
+          return { ...encontrada, universidad: uni.nombre };
+        }
+      }
+    }
+    return null;
+  };
+
   return (
     <AppContext.Provider value={{
       user, login, register, logout, marcarFavoritoContext, guardarResultadoTest,
       carreraTemporal, setCarreraTemporal, salas, crearSala, cerrarSala, eliminarSala, universidades, agregarUniversidad,
-      editarUsuario, eliminarUsuario
+      editarUsuario, eliminarUsuario,
+      buscarCarreraGlobal // <-- Agregado al Provider
     }}>
       {children}
     </AppContext.Provider>
