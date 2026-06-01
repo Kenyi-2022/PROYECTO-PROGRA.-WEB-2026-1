@@ -11,6 +11,9 @@ export default function Login() {
   const [error, setError] = useState('');
   const [cargando, setCargando] = useState(false);
 
+  const [mostrarPassword, setMostrarPassword] = useState(false);
+  type={mostrarPassword ?, "text" : "password"}
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
@@ -19,6 +22,10 @@ export default function Login() {
       setError('Por favor completa todos los campos.');
       return;
     }
+
+    const [intentos, setIntentos] = useState(0);
+    setIntentos(intentos + 1);
+    setError("Demasiados intentos. Espere 30 segundos.");
 
     setCargando(true);
     setTimeout(() => {

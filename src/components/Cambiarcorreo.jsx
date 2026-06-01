@@ -7,19 +7,17 @@ const Cambiarcorreo = () => {
     return (
         <div>
 
-          <button
-    onClick={() => setAbierto(true)}
-    className="text-blue-600 font-bold hover:text-blue-700 transition-all cursor-pointer"
->
-    Cambiar
-</button>
+            <button
+                onClick={() => setAbierto(true)}
+                className="text-blue-600 font-bold hover:text-blue-700 transition-all cursor-pointer"
+            >
+                Cambiar
+            </button>
 
             {abierto && (
 
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-
                     <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 relative animate-fadeIn">
-
                         <button
                             onClick={() => setAbierto(false)}
                             className="absolute top-4 right-4 text-slate-500 hover:text-black text-xl"
@@ -36,12 +34,10 @@ const Cambiarcorreo = () => {
                         </p>
 
                         <div className="space-y-5">
-
                             <div>
                                 <p className="text-sm font-semibold text-slate-700 mb-2">
                                     Nuevo Correo Electrónico
                                 </p>
-
                                 <input
                                     type="email"
                                     className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
