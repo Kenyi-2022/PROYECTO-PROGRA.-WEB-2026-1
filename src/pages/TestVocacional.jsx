@@ -219,7 +219,7 @@ export default function TestVocacional() {
       }, {});
 
       const areaGanadora = Object.keys(conteo).reduce((a, b) => conteo[a] > conteo[b] ? a : b);
-      
+
       const nombresMacroAreas = {
         Tecnologia: "Ingeniería de Sistemas y Computación",
         Negocios_Finanzas: "Ingeniería Industrial / Gestión Logística",
@@ -237,10 +237,19 @@ export default function TestVocacional() {
       } catch (e) {
         console.warn("Falta enlazar setCarreraTemporal en AppContext.");
       }
-      
+
       // Respaldo de seguridad infalible para asegurar la carga asíncrona
       localStorage.setItem('carreraTemporal', resultadoFinal);
-      
+
+      try {
+        if (context && typeof context.guardarResultadoTest === 'function') {
+          context.guardarResultadoTest(resultadoFinal);
+        }
+      } catch (e) {
+        console.warn("No se pudo guardar la actividad");
+      }
+
+
       // Saltamos a la pantalla de resultados
       navigate('/resultado-test');
 
@@ -272,7 +281,7 @@ export default function TestVocacional() {
     <div className="font-sans text-slate-800 bg-slate-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8 flex flex-col justify-between">
       <div className="max-w-2xl w-full bg-white rounded-3xl shadow-xl border border-slate-100 p-8 md:p-12 transition-all duration-500 mx-auto my-auto">
         <div className="space-y-8">
-          
+
           {/* Progreso */}
           <div className="space-y-2">
             <div className="flex justify-between items-center text-sm font-bold text-slate-400">
@@ -280,7 +289,7 @@ export default function TestVocacional() {
               <span>Pregunta {currentPregunta + 1} de {preguntas.length}</span>
             </div>
             <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
-              <div 
+              <div
                 className="bg-gradient-to-r from-blue-600 to-teal-400 h-full transition-all duration-500 ease-out"
                 style={{ width: `${((currentPregunta + 1) / preguntas.length) * 100}%` }}
               ></div>

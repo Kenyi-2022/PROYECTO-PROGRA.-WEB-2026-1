@@ -120,32 +120,77 @@ export function AppProvider({ children }) {
   };
 
   const marcarFavoritoContext = (nombreUniversidad) => {
-  if (!user) return;
-  const usuarioActualizado = { ...user };
-  if (!usuarioActualizado.universidadesFavoritas) {
-    usuarioActualizado.universidadesFavoritas = [];
-  }
-  if (usuarioActualizado.universidadesFavoritas.includes(nombreUniversidad)) {
-    usuarioActualizado.universidadesFavoritas = usuarioActualizado.universidadesFavoritas.filter(
-      (uni) => uni !== nombreUniversidad
+    if (!user) return;
+    const usuarioActualizado = { ...user };
+    if (!usuarioActualizado.universidadesFavoritas) {
+      usuarioActualizado.universidadesFavoritas = [];
+    }
+    if (usuarioActualizado.universidadesFavoritas.includes(nombreUniversidad)) {
+      usuarioActualizado.universidadesFavoritas = usuarioActualizado.universidadesFavoritas.filter(
+        (uni) => uni !== nombreUniversidad
+      );
+    } else {
+      usuarioActualizado.universidadesFavoritas.push(nombreUniversidad);
+    }
+
+    setUser(usuarioActualizado);
+    localStorage.setItem("vocatest_sesion", JSON.stringify(usuarioActualizado));
+
+    const usuariosGlobales = JSON.parse(localStorage.getItem('vocatest_usuarios') || '[]');
+    const usuariosActualizados = usuariosGlobales.map(u =>
+      u.id === usuarioActualizado.id ? usuarioActualizado : u
     );
-  } else {
-    usuarioActualizado.universidadesFavoritas.push(nombreUniversidad);
-  }
+    localStorage.setItem('vocatest_usuarios', JSON.stringify(usuariosActualizados));
+  };
 
-  setUser(usuarioActualizado); 
-  localStorage.setItem("vocatest_sesion", JSON.stringify(usuarioActualizado));
+  const guardarResultadoTest = (resultado) => {
 
-  const usuariosGlobales = JSON.parse(localStorage.getItem('vocatest_usuarios') || '[]');
-  const usuariosActualizados = usuariosGlobales.map(u => 
-    u.id === usuarioActualizado.id ? usuarioActualizado : u
-  );
-  localStorage.setItem('vocatest_usuarios', JSON.stringify(usuariosActualizados));
-};
+    if (!user) return;
+
+    const nuevaActividad = {
+      tipo: "Test Vocacional",
+      resultado,
+      fecha: new Date().toLocaleDateString('es-PE')
+    };
+
+    const usuarioActualizado = {
+      ...user,
+
+      carreraRecomendada: resultado,
+      fechaTest: nuevaActividad.fecha,
+
+      actividad: [
+        ...(user.actividad || []),
+        nuevaActividad
+      ]
+    };
+
+    setUser(usuarioActualizado);
+
+    localStorage.setItem(
+      'vocatest_sesion',
+      JSON.stringify(usuarioActualizado)
+    );
+
+    const usuariosGlobales = JSON.parse(
+      localStorage.getItem('vocatest_usuarios') || '[]'
+    );
+
+    const usuariosActualizados = usuariosGlobales.map(u =>
+      u.id === usuarioActualizado.id
+        ? usuarioActualizado
+        : u
+    );
+
+    localStorage.setItem(
+      'vocatest_usuarios',
+      JSON.stringify(usuariosActualizados)
+    );
+  };
 
   return (
     <AppContext.Provider value={{
-      user, login, register, logout, loginOVerificarUsuario, marcarFavoritoContext,
+      user, login, register, logout, loginOVerificarUsuario, marcarFavoritoContext, guardarResultadoTest,
       carreraTemporal, setCarreraTemporal
     }}>
       {children}
