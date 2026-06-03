@@ -69,7 +69,7 @@ const equivalenciasCarreras = {
       tipo: "Privada",
       costoAproximado: "S/. 2,000 - S/. 3,800 mensual",
       escalaPagos: "Escalas diferenciadas por evaluación",
-      mallaUrl: "https://www.upch.edu.pe/sites/default/files/plan_de_estudios/medicina.pdf",
+      mallaUrl: "https://medicina.cayetano.edu.pe/wp-content/uploads/sites/2/2025/07/plan_de_estudios-MEDICINA-2024.pdf",
       masInfoUrl: "https://cayetano.edu.pe/pregrado/medicina/",
       destacado: true
     },
@@ -78,7 +78,7 @@ const equivalenciasCarreras = {
       tipo: "Pública",
       costoAproximado: "Gratuita (Costo administrativo mínimo)",
       escalaPagos: "No aplica",
-      mallaUrl: "https://medicina.cayetano.edu.pe/wp-content/uploads/sites/2/2025/07/plan_de_estudios-MEDICINA-2024.pdf",
+      mallaUrl: "https://medicina.unmsm.edu.pe/wp-content/uploads/2021/06/PLAN-CURRICULAR-EP-MEDICINA.pdf",
       masInfoUrl: "https://medicina.unmsm.edu.pe/escuela-profesional-de-medicina-humana/",
       destacado: false
     },
@@ -134,29 +134,85 @@ const equivalenciasCarreras = {
   ]
 };
 
+const procesarResultadosAsincronos = async (listaRespuestas) => {
+    setIsLoading(true);
+
+    try {
+      // Simulación del procesamiento del algoritmo
+      await new Promise((resolve) => setTimeout(resolve, 2200));
+
+      const conteo = listaRespuestas.reduce((acc, cat) => {
+        acc[cat] = (acc[cat] || 0) + 1;
+        return acc;
+      }, {});
+
+      const areaGanadora = Object.keys(conteo).reduce((a, b) => conteo[a] > conteo[b] ? a : b);
+
+      // Mapeo completo de las carreras según la categoría ganadora
+      const nombresMacroAreas = {
+        Tecnologia: "Ingeniería de Sistemas y Computación",
+        Negocios_Finanzas: "Ingeniería Industrial",
+        Salud_Bienestar: "Medicina",
+        Humanidades_Leyes: "Derecho",
+        Diseno_Construccion: "Arquitectura"
+      };
+
+      const carreraCalculada = nombresMacroAreas[areaGanadora] || "Ingeniería de Sistemas y Computación";
+
+      // BÚSQUEDA DINÁMICA
+      const infoCarrera = buscarCarreraGlobal(carreraCalculada);
+      const carreraFinalAAsignar = infoCarrera ? infoCarrera.nombre : carreraCalculada;
+
+      // =======================================================
+      // 🔥 SOLUCIÓN: ESCRITURA HÍBRIDA Y ESPERA ASÍNCRONA
+      // =======================================================
+      
+      // 1. Forzamos la actualización local SIEMPRE (para que la UI no lea caché vieja)
+      if (typeof setCarreraTemporal === 'function') {
+        setCarreraTemporal(carreraFinalAAsignar);
+      }
+      localStorage.setItem('carreraTemporal', carreraFinalAAsignar);
+
+      // 2. Si está logueado, aseguramos la persistencia oficial en el servidor
+      if (user) {
+        if (typeof guardarResultadoTest === 'function') {
+          // ⚠️ AGREGADO 'await': Detiene la navegación hasta que el contexto se actualice con el nuevo resultado
+          await guardarResultadoTest(carreraFinalAAsignar); 
+        }
+      }
+
+      // 3. Ahora que todo está guardado y actualizado en caliente, cambiamos de pantalla
+      navigate('/resultado-test');
+
+    } catch (error) {
+      console.error(error);
+      alert("Hubo un problema al procesar tus respuestas.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
+
 const ResultadoTest = () => {
   const navigate = useNavigate();
-  // ✅ Extraemos también guardarResultadoTest del Contexto
-  const { carreraTemporal, guardarResultadoTest } = useApp();
+  const { carreraTemporal } = useApp();
 
-  const [carreraFinal] = useState(() => {
-    return carreraTemporal
-      || localStorage.getItem('carreraTemporal')
-      || "Ingeniería de Sistemas y Computación";
+  // 🛠️ Estado dinámico inicializado con prioridad limpia
+  const [carreraFinal, setCarreraFinal] = useState(() => {
+    return carreraTemporal || localStorage.getItem('carreraTemporal') || "Ingeniería de Sistemas y Computación";
   });
 
-  //Este useEffect se ejecuta automáticamente una vez al cargar la página.
-  // Guarda el resultado en el perfil del usuario y lo envía a la sala del Administrador si es que hay una.
+  // 🛠️ Sincronizar el estado de la pantalla cada vez que la carrera cambie en el Contexto o Storage
   useEffect(() => {
-    if (carreraFinal) {
-      guardarResultadoTest(carreraFinal);
+    const ultimaCarrera = carreraTemporal || localStorage.getItem('carreraTemporal');
+    if (ultimaCarrera) {
+      setCarreraFinal(ultimaCarrera);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [carreraTemporal]);
 
   const universidadesRecomendadas = equivalenciasCarreras[carreraFinal] || [];
 
-  // Función manejadora para abrir los links externos de forma segura
   const abrirEnlaceExterno = (url) => {
     if (url && url !== "#") {
       window.open(url, '_blank', 'noopener,noreferrer');
@@ -199,15 +255,17 @@ const ResultadoTest = () => {
             universidadesRecomendadas.map((uni, idx) => (
               <div
                 key={idx}
-                className={`bg-white rounded-xl shadow-sm p-5 border transition-all ${uni.destacado ? 'border-blue-400 ring-2 ring-blue-100' : 'border-gray-200'
-                  }`}
+                className={`bg-white rounded-xl shadow-sm p-5 border transition-all ${
+                  uni.destacado ? 'border-blue-400 ring-2 ring-blue-100' : 'border-gray-200'
+                }`}
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
                       <h3 className="text-lg font-bold text-gray-900">{uni.universidad}</h3>
-                      <span className={`text-xs px-2 py-0.5 rounded-md font-medium ${uni.tipo === 'Privada' ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700'
-                        }`}>
+                      <span className={`text-xs px-2 py-0.5 rounded-md font-medium ${
+                        uni.tipo === 'Privada' ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700'
+                      }`}>
                         {uni.tipo}
                       </span>
                       {uni.destacado && (
@@ -222,14 +280,12 @@ const ResultadoTest = () => {
                     </div>
                   </div>
                   <div className="flex sm:flex-col gap-2 justify-end">
-                    {/* Botón Malla Curricular conectado con mallaUrl */}
                     <button 
                       onClick={() => abrirEnlaceExterno(uni.mallaUrl)}
                       className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors shadow-sm cursor-pointer"
                     >
                       Ver Malla Curricular
                     </button>
-                    {/* Botón Más Detalles conectado con masInfoUrl */}
                     <button 
                       onClick={() => abrirEnlaceExterno(uni.masInfoUrl)}
                       className="border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg transition-colors cursor-pointer"

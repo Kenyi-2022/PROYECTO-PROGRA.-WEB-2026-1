@@ -109,44 +109,62 @@ export function AppProvider({ children }) {
   };
 
   const guardarResultadoTest = (resultadoFinal) => {
-    if (!user) return;
-    const ahora = new Date();
-    const fechaFormateada = ahora.toLocaleDateString('es-PE', { day: 'numeric', month: 'long', year: 'numeric' });
-    const entrada = { resultado: resultadoFinal, fecha: fechaFormateada };
+  // 🔥 PRIMER BLINDAJE: Forzamos la actualización inmediata del estado temporal de la carrera
+  // Esto asegura que la UI ('ResultadoTest.jsx') lea el cambio en caliente sin importar las salas
+  if (typeof setCarreraTemporal === 'function') {
+    setCarreraTemporal(resultadoFinal);
+  }
+  localStorage.setItem('carreraTemporal', resultadoFinal);
 
-    const usuarioActualizado = {
-      ...user, carreraRecomendada: resultadoFinal,
-      carrerasRecomendadas: [resultadoFinal, ...(user.carrerasRecomendadas || [])].slice(0, 5),
-      historialTests: [entrada, ...(user.historialTests || [])].slice(0, 20),
-      fechaTest: fechaFormateada
-    };
+  // Si no hay usuario logueado, detenemos aquí (el flujo de invitado ya se respaldó arriba)
+  if (!user) return;
 
-    setUser(usuarioActualizado);
-    localStorage.setItem('vocatest_sesion', JSON.stringify(usuarioActualizado));
+  const ahora = new Date();
+  const fechaFormateada = ahora.toLocaleDateString('es-PE', { day: 'numeric', month: 'long', year: 'numeric' });
+  const entrada = { resultado: resultadoFinal, fecha: fechaFormateada };
 
-    const usuarios = JSON.parse(localStorage.getItem('vocatest_usuarios') || '[]');
-    const actualizados = usuarios.map(u => u.id === usuarioActualizado.id ? usuarioActualizado : u);
-    localStorage.setItem('vocatest_usuarios', JSON.stringify(actualizados));
-
-    const codigoSala = localStorage.getItem("vocatest_sala_actual");
-    if (codigoSala) {
-      const salasAlmacenadas = JSON.parse(localStorage.getItem("vocatest_salas") || "[]");
-      const salasActualizadas = salasAlmacenadas.map(sala => {
-        if (sala.codigo === codigoSala && sala.activa) {
-          const nuevoResultado = {
-            nombre: `${user.nombres} ${user.apellidos}`, correo: user.correo,
-            resultado: resultadoFinal, fecha: ahora.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' })
-          };
-          const resultadosPrevios = (sala.resultados || []).filter(r => r.correo !== user.correo);
-          return { ...sala, resultados: [...resultadosPrevios, nuevoResultado] };
-        }
-        return sala;
-      });
-      localStorage.setItem("vocatest_salas", JSON.stringify(salasActualizadas));
-      setSalas(salasActualizadas);
-      localStorage.removeItem("vocatest_sala_actual");
-    }
+  const usuarioActualizado = {
+    ...user, 
+    carreraRecommended: resultadoFinal, // Mantenemos tu estructura interna
+    carreraRecomendada: resultadoFinal,
+    carrerasRecomendadas: [resultadoFinal, ...(user.carrerasRecomendadas || [])].slice(0, 5),
+    historialTests: [entrada, ...(user.historialTests || [])].slice(0, 20),
+    fechaTest: fechaFormateada
   };
+
+  setUser(usuarioActualizado);
+  localStorage.setItem('vocatest_sesion', JSON.stringify(usuarioActualizado));
+
+  const usuarios = JSON.parse(localStorage.getItem('vocatest_usuarios') || '[]');
+  const actualizados = usuarios.map(u => u.id === usuarioActualizado.id ? usuarioActualizado : u);
+  localStorage.setItem('vocatest_usuarios', JSON.stringify(actualizados));
+
+  const codigoSala = localStorage.getItem("vocatest_sala_actual");
+  if (codigoSala) {
+    const salasAlmacenadas = JSON.parse(localStorage.getItem("vocatest_salas") || "[]");
+    const salasActualizadas = salasAlmacenadas.map(sala => {
+      if (sala.codigo === codigoSala && sala.activa) {
+        const nuevoResultado = {
+          nombre: `${user.nombres} ${user.apellidos}`, 
+          correo: user.correo,
+          resultado: resultadoFinal, 
+          fecha: ahora.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' })
+        };
+        
+        // Filtramos resultados previos del mismo correo para que se reemplace por el nuevo intento
+        const resultadosPrevios = (sala.resultados || []).filter(r => r.correo !== user.correo);
+        return { ...sala, resultados: [...resultadosPrevios, nuevoResultado] };
+      }
+      return sala;
+    });
+
+    localStorage.setItem("vocatest_salas", JSON.stringify(salasActualizadas));
+    
+    if (typeof setSalas === 'function') {
+      setSalas(salasActualizadas);
+    }
+  }
+};
 
   const marcarFavoritoContext = (nombreUniversidad) => {
     if (!user) return;
