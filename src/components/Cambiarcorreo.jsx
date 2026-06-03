@@ -10,6 +10,8 @@ const Cambiarcorreo = () => {
     const [passwordActual, setPasswordActual] = useState("");
     const [error, setError] = useState("");
 
+    const [mensaje, setMensaje] = useState("");
+
     const handleGuardar = () => {
         setError("");
 
@@ -29,7 +31,7 @@ const Cambiarcorreo = () => {
             setError("El nuevo correo debe ser diferente al actual.");
             return;
         }
-        
+
         const resultado = cambiarCorreo(
             nuevoCorreo,
             confirmarCorreo,
@@ -37,7 +39,7 @@ const Cambiarcorreo = () => {
         );
 
         if (resultado.ok) {
-            alert("Correo actualizado correctamente");
+            setMensaje("Correo actualizado correctamente");
             setAbierto(false);
 
             setNuevoCorreo("");
@@ -69,6 +71,12 @@ const Cambiarcorreo = () => {
                         <h2 className="text-2xl font-black text-slate-900 mb-6">
                             Cambiar dirección de correo electrónico
                         </h2>
+                        {mensaje && (
+                            <div className="bg-green-50 border border-green-200 text-green-600 text-sm p-3 rounded-xl mb-4">
+                                {mensaje}
+                            </div>
+                        )}
+
                         {error && (
                             <div className="bg-red-50 border border-red-200 text-red-600 text-sm p-3 rounded-xl mb-4">
                                 {error}

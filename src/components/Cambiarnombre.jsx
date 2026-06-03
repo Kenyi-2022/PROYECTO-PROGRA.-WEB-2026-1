@@ -17,10 +17,12 @@ const Cambiarnombre = () => {
             return;
         }
 
-        const resultado = cambiarNombre(
-            nuevoNombre,
-            passwordActual
-        );
+        const partes = nuevoNombre.trim().split(" ");
+
+        const nombres = partes[0];
+        const apellidos = partes.slice(1).join(" ") || "";
+
+        const resultado = cambiarNombre(nombres, apellidos, passwordActual);
 
         if (resultado.ok) {
             alert("Nombre actualizado correctamente");

@@ -10,6 +10,8 @@ const Cambiarpassword = () => {
     const [confirmarPassword, setConfirmarPassword] = useState("");
     const [error, setError] = useState("");
 
+    const [mensaje, setMensaje] = useState("");
+
     const handleGuardar = () => {
         setError("");
 
@@ -42,13 +44,17 @@ const Cambiarpassword = () => {
         );
 
         if (resultado.ok) {
-            alert("Contraseña actualizada correctamente");
-
-            setAbierto(false);
+            setMensaje("✔ Contraseña actualizada");
 
             setPasswordActual("");
             setNuevaPassword("");
             setConfirmarPassword("");
+
+            // cerrar después de 1.5 segundos
+            setTimeout(() => {
+                setAbierto(false);
+                setMensaje("");
+            }, 1500);
         } else {
             setError(resultado.mensaje);
         }
@@ -76,6 +82,11 @@ const Cambiarpassword = () => {
                         <h2 className="text-2xl font-black text-slate-900 mb-6">
                             Cambiar contraseña
                         </h2>
+                        {mensaje && (
+                            <div className="bg-green-50 border border-green-200 text-green-600 text-sm p-3 rounded-xl mb-4 animate-pulse">
+                                {mensaje}
+                            </div>
+                        )}
 
                         {error && (
                             <div className="bg-red-50 border border-red-200 text-red-600 text-sm p-3 rounded-xl mb-4">

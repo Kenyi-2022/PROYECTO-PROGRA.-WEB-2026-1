@@ -215,7 +215,7 @@ export function AppProvider({ children }) {
     }
   };
 
-  const cambiarNombre = (nuevoNombre, passwordActual) => {
+  const cambiarNombre = (nombres, apellidos, passwordActual) => {
     if (!user) {
       return { ok: false, mensaje: "No hay sesión activa." };
     }
@@ -225,7 +225,8 @@ export function AppProvider({ children }) {
     }
 
     editarUsuario(user.id, {
-      nombres: nuevoNombre
+      nombres, 
+      apellidos
     });
 
     return { ok: true };
