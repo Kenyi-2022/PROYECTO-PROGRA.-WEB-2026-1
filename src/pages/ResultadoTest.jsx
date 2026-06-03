@@ -11,7 +11,8 @@ const equivalenciasCarreras = {
       tipo: "Privada",
       costoAproximado: "S/. 2,500 - S/. 4,200 mensual",
       escalaPagos: "5 escalas según colegio de procedencia",
-      mallaUrl: "#",
+      mallaUrl: "https://www.ulima.edu.pe/sites/default/files/career/files/plan_de_estudios_eegg-2026-1.pdf",
+      masInfoUrl: "https://www.ulima.edu.pe/pregrado/ingenieria-de-sistemas", // Enlace informativo añadido
       destacado: true
     },
     {
@@ -19,7 +20,8 @@ const equivalenciasCarreras = {
       tipo: "Pública",
       costoAproximado: "Gratuita (Costo administrativo mínimo)",
       escalaPagos: "No aplica",
-      mallaUrl: "#",
+      mallaUrl: "https://www.scribd.com/document/357167816/Plan-de-estudios-Ingenieria-de-Sistemas-UNMSM-pdf",
+      masInfoUrl: "https://fisi.unmsm.edu.pe/html/sistemas.html",
       destacado: false
     },
     {
@@ -27,17 +29,19 @@ const equivalenciasCarreras = {
       tipo: "Privada",
       costoAproximado: "S/. 850 - S/. 1,200 mensual",
       escalaPagos: "Turno y sede dependiente",
-      mallaUrl: "#",
+      mallaUrl: "https://www.utp.edu.pe/sites/default/files/mallas/MALLA_Ingenieria_de_Sistemas_e_Informatica_0.pdf",
+      masInfoUrl: "https://www.utp.edu.pe/carreras/ingenieria-de-sistemas-e-informatica",
       destacado: false
     }
   ],
-  "Ingeniería Industrial / Gestión Logística": [
+  "Ingeniería Industrial": [
     {
       universidad: "Pontificia Universidad Católica del Perú",
       tipo: "Privada",
       costoAproximado: "S/. 1,800 - S/. 3,500 mensual",
       escalaPagos: "7 escalas según evaluación socioeconómica",
-      mallaUrl: "#",
+      mallaUrl: "https://facultad-ciencias-ingenieria.pucp.edu.pe/wp-content/uploads/2026/03/ppee_INDUSTRIAL-2026-1.pdf",
+      masInfoUrl: "https://pucp.edu.pe/carrera/ingenieria-industrial/",
       destacado: true
     },
     {
@@ -45,7 +49,8 @@ const equivalenciasCarreras = {
       tipo: "Privada",
       costoAproximado: "S/. 2,500 - S/. 4,200 mensual",
       escalaPagos: "5 escalas",
-      mallaUrl: "#",
+      mallaUrl: "https://www.ulima.edu.pe/sites/default/files/career/files/ingenieria_industrial_plan_de_estudios.pdf",
+      masInfoUrl: "https://www.ulima.edu.pe/pregrado/ingenieria-industrial",
       destacado: false
     },
     {
@@ -53,17 +58,19 @@ const equivalenciasCarreras = {
       tipo: "Pública",
       costoAproximado: "Gratuita (Costo administrativo mínimo)",
       escalaPagos: "No aplica",
-      mallaUrl: "#",
+      mallaUrl: "https://acreditacion.uni.edu.pe/es/industrial/curriculum/",
+      masInfoUrl: "https://portal.uni.edu.pe/index.php/facultades/ingenieria-industrial-y-de-sistemas",
       destacado: false
     }
   ],
-  "Ciencias de la Salud / Medicina": [
+  "Medicina": [
     {
       universidad: "Universidad Peruana Cayetano Heredia",
       tipo: "Privada",
       costoAproximado: "S/. 2,000 - S/. 3,800 mensual",
       escalaPagos: "Escalas diferenciadas por evaluación",
-      mallaUrl: "#",
+      mallaUrl: "https://www.upch.edu.pe/sites/default/files/plan_de_estudios/medicina.pdf",
+      masInfoUrl: "https://cayetano.edu.pe/pregrado/medicina/",
       destacado: true
     },
     {
@@ -71,7 +78,8 @@ const equivalenciasCarreras = {
       tipo: "Pública",
       costoAproximado: "Gratuita (Costo administrativo mínimo)",
       escalaPagos: "No aplica",
-      mallaUrl: "#",
+      mallaUrl: "https://medicina.cayetano.edu.pe/wp-content/uploads/sites/2/2025/07/plan_de_estudios-MEDICINA-2024.pdf",
+      masInfoUrl: "https://medicina.unmsm.edu.pe/escuela-profesional-de-medicina-humana/",
       destacado: false
     },
     {
@@ -79,25 +87,48 @@ const equivalenciasCarreras = {
       tipo: "Privada",
       costoAproximado: "S/. 1,500 - S/. 2,800 mensual",
       escalaPagos: "4 escalas",
-      mallaUrl: "#",
+      mallaUrl: "https://medicina.usmp.edu.pe/wp-content/uploads/transparencia/CBC-VII/MV8/RR.459-2025-CU-R-USMP-CURRICULO_FMH-2025_ve2.pdf",
+      masInfoUrl: "https://medicina.usmp.edu.pe/",
       destacado: false
     }
   ],
-  "Administración de Empresas": [
+  "Derecho": [
+    {
+      universidad: "Pontificia Universidad Católica del Perú",
+      tipo: "Privada",
+      costoAproximado: "S/. 1,800 - S/. 3,500 mensual",
+      escalaPagos: "7 escalas",
+      mallaUrl: "https://facultad-derecho.pucp.edu.pe/wp-content/uploads/2022/08/malla-curricular.pdf",
+      masInfoUrl: "https://pucp.edu.pe/carrera/derecho/",
+      destacado: true
+    },
+    {
+      universidad: "Universidad Nacional Mayor de San Marcos",
+      tipo: "Pública",
+      costoAproximado: "Gratuita",
+      escalaPagos: "No aplica",
+      mallaUrl: "https://derecho2.unmsm.edu.pe/ddocus/ANEXO%20RR%2007023-R-170001.pdf",
+      masInfoUrl: "https://derecho.unmsm.edu.pe/",
+      destacado: false
+    }
+  ],
+  "Arquitectura": [
     {
       universidad: "Universidad de Lima",
       tipo: "Privada",
       costoAproximado: "S/. 2,500 - S/. 4,200 mensual",
       escalaPagos: "5 escalas",
-      mallaUrl: "#",
+      mallaUrl: "https://www.ulima.edu.pe/sites/default/files/career/files/7000_plan_de_estudios_2026-1.pdf",
+      masInfoUrl: "https://www.ulima.edu.pe/pregrado/arquitectura",
       destacado: true
     },
     {
-      universidad: "Universidad del Pacífico",
-      tipo: "Privada",
-      costoAproximado: "S/. 3,000 - S/. 5,000 mensual",
-      escalaPagos: "Escalas diferenciadas",
-      mallaUrl: "#",
+      universidad: "Universidad Nacional de Ingeniería",
+      tipo: "Pública",
+      costoAproximado: "Gratuita",
+      escalaPagos: "No aplica",
+      mallaUrl: "https://portal.uni.edu.pe/index.php/facultades/arquitectura-urbanismo-y-artes/arquitectura",
+      masInfoUrl: "https://faua.uni.edu.pe/",
       destacado: false
     }
   ]
@@ -124,6 +155,15 @@ const ResultadoTest = () => {
   }, []);
 
   const universidadesRecomendadas = equivalenciasCarreras[carreraFinal] || [];
+
+  // Función manejadora para abrir los links externos de forma segura
+  const abrirEnlaceExterno = (url) => {
+    if (url && url !== "#") {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    } else {
+      alert("El enlace no está disponible en este momento.");
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 text-gray-800">
@@ -182,10 +222,18 @@ const ResultadoTest = () => {
                     </div>
                   </div>
                   <div className="flex sm:flex-col gap-2 justify-end">
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors shadow-sm">
+                    {/* Botón Malla Curricular conectado con mallaUrl */}
+                    <button 
+                      onClick={() => abrirEnlaceExterno(uni.mallaUrl)}
+                      className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors shadow-sm cursor-pointer"
+                    >
                       Ver Malla Curricular
                     </button>
-                    <button className="border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+                    {/* Botón Más Detalles conectado con masInfoUrl */}
+                    <button 
+                      onClick={() => abrirEnlaceExterno(uni.masInfoUrl)}
+                      className="border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg transition-colors cursor-pointer"
+                    >
                       Más detalles
                     </button>
                   </div>
@@ -194,7 +242,7 @@ const ResultadoTest = () => {
             ))
           ) : (
             <div className="bg-white rounded-xl p-8 text-center border border-dashed border-gray-300 text-gray-500">
-              No se encontraron universidades registradas para esta carrera en la base de datos local.
+              No se encontraron universidades de respaldo estático pre-mapeadas para la carrera "{carreraFinal}".
             </div>
           )}
         </div>
@@ -202,7 +250,7 @@ const ResultadoTest = () => {
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4 border-t border-gray-200 pt-6">
           <button
             onClick={() => navigate('/')}
-            className="w-full sm:w-auto text-gray-600 hover:text-gray-900 font-medium text-sm px-4 py-2 transition-colors"
+            className="w-full sm:w-auto text-gray-600 hover:text-gray-900 font-medium text-sm px-4 py-2 transition-colors cursor-pointer"
           >
             Volver al Inicio
           </button>
@@ -211,7 +259,7 @@ const ResultadoTest = () => {
               localStorage.removeItem('carreraTemporal');
               navigate('/test');
             }}
-            className="w-full sm:w-auto bg-gray-900 hover:bg-gray-800 text-white font-medium text-sm px-6 py-2.5 rounded-xl transition-colors shadow-sm"
+            className="w-full sm:w-auto bg-gray-900 hover:bg-gray-800 text-white font-medium text-sm px-6 py-2.5 rounded-xl transition-colors shadow-sm cursor-pointer"
           >
             Repetir Cuestionario
           </button>

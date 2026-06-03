@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+import LogoVocatest from "../components/Logo";
 
 function Navbar() {
   const { user, logout } = useApp();
@@ -46,7 +47,9 @@ function Navbar() {
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
 
         <Link to="/" className="text-2xl font-bold hover:text-yellow-300 transition">
-          VocaTest
+          <LogoVocatest className="w-10 h-10" />
+          
+          <span>VocaTest</span>
         </Link>
 
         <ul className="flex gap-3 font-medium items-center flex-wrap">
