@@ -77,7 +77,8 @@ export function AppProvider({ children }) {
 
   const login = (correo, contraseña) => {
     const usuarios = JSON.parse(localStorage.getItem('vocatest_usuarios') || '[]');
-    const encontrado = usuarios.find(u => u.correo === correo && u.contraseña === contraseña);
+    const correoNormalizado = correo.trim().toLowerCase();
+    const encontrado = usuarios.find(u => u.correo.toLowerCase() === correoNormalizado && u.contraseña === contraseña);
     if (encontrado) {
       const actualizado = {
         ...encontrado,
@@ -97,18 +98,26 @@ export function AppProvider({ children }) {
 
   const register = (datosUsuario) => {
     const usuarios = JSON.parse(localStorage.getItem('vocatest_usuarios') || '[]');
-    if (usuarios.find(u => u.correo === datosUsuario.correo)) return { ok: false, mensaje: "Este correo ya está registrado." };
+    const correoNormalizado = datosUsuario.correo.trim().toLowerCase();
+    if (usuarios.find(u => u.correo.toLowerCase() === correoNormalizado)) return { ok: false, mensaje: "Este correo ya está registrado." };
 
     const ahora = new Date();
     const fechaFormateada = ahora.toLocaleDateString('es-PE', { day: 'numeric', month: 'long', year: 'numeric' });
+
+    const { confirmar, ...datosLimpios } = datosUsuario;
+
     const nuevoUsuario = {
-      ...datosUsuario, id: Date.now(), rol: "Estudiante",
+      ...datosLimpios, id: Date.now(), rol: "Estudiante", correo: correoNormalizado,
       carreraRecomendada: carreraTemporal || "",
       carrerasRecomendadas: carreraTemporal ? [carreraTemporal] : [],
       universidadesFavoritas: [],
       historialTests: carreraTemporal ? [{ resultado: carreraTemporal, fecha: fechaFormateada }] : [],
       fechaTest: carreraTemporal ? fechaFormateada : "",
-      ultimoIngreso: ahora.toLocaleDateString('es-PE')
+      ultimoIngreso: ahora.toLocaleDateString('es-PE'),
+
+      notificacionesEmail: true,
+      recordatorios: true,
+      perfilPublico: true
     };
 
     const actualizados = [...usuarios, nuevoUsuario];
@@ -225,7 +234,7 @@ export function AppProvider({ children }) {
     }
 
     editarUsuario(user.id, {
-      nombres, 
+      nombres,
       apellidos
     });
 
@@ -237,7 +246,10 @@ export function AppProvider({ children }) {
       return { ok: false, mensaje: "No hay sesión activa." };
     }
 
-    if (nuevoCorreo !== confirmarCorreo) {
+    const nuevoCorreoNormalizado = nuevoCorreo.trim().toLowerCase();
+    const confirmarCorreoNormalizado = confirmarCorreo.trim().toLowerCase();
+
+    if (nuevoCorreoNormalizado !== confirmarCorreoNormalizado) {
       return { ok: false, mensaje: "Los correos no coinciden." };
     }
 
@@ -248,7 +260,7 @@ export function AppProvider({ children }) {
     const usuarios = JSON.parse(localStorage.getItem('vocatest_usuarios') || '[]');
 
     const existe = usuarios.find(
-      u => u.correo === nuevoCorreo && u.id !== user.id
+      u => u.correo.toLowerCase() === nuevoCorreoNormalizado && u.id !== user.id
     );
 
     if (existe) {
@@ -256,7 +268,7 @@ export function AppProvider({ children }) {
     }
 
     editarUsuario(user.id, {
-      correo: nuevoCorreo
+      correo: nuevoCorreoNormalizado
     });
 
     return { ok: true };

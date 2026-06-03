@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import Navbar from '../components/navbar';
 import Footer from '../components/footer';
-import Cambiarpassword from '../components/Cambiarpassword';
+import Cambiarpassword from '../components/cambiarpassword';
 import Cambiarcorreo from '../components/Cambiarcorreo';
-import Cambiarnombre from '../components/cambiarnombre';
+import Cambiarnombre from '../components/Cambiarnombre';
 
 const PerfilEditar = () => {
 
@@ -13,6 +13,23 @@ const PerfilEditar = () => {
   const navigate = useNavigate();
 
   const [tabActiva, setTabActiva] = useState('cuenta');
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center gap-4">
+        <p className="text-slate-600 font-medium">
+          Debes iniciar sesión para editar tu perfil.
+        </p>
+
+        <button
+          onClick={() => navigate('/login')}
+          className="bg-blue-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-blue-700 transition"
+        >
+          Ir al Login
+        </button>
+      </div>
+    );
+  }
 
   const handleLogout = () => {
     logout();

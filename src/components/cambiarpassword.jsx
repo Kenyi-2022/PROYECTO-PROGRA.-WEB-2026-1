@@ -50,7 +50,6 @@ const Cambiarpassword = () => {
             setNuevaPassword("");
             setConfirmarPassword("");
 
-            // cerrar después de 1.5 segundos
             setTimeout(() => {
                 setAbierto(false);
                 setMensaje("");

@@ -9,11 +9,19 @@ const Cambiarnombre = () => {
     const [passwordActual, setPasswordActual] = useState("");
     const [error, setError] = useState("");
 
+    const [mensaje, setMensaje] = useState("");
+
     const handleGuardar = () => {
         setError("");
+        setMensaje("");
 
         if (!nuevoNombre.trim()) {
             setError("Ingrese un nombre válido.");
+            return;
+        }
+
+        if (!nuevoNombre || !passwordActual.trim()) {
+            setError("Completa todos los campos.");
             return;
         }
 
@@ -25,10 +33,15 @@ const Cambiarnombre = () => {
         const resultado = cambiarNombre(nombres, apellidos, passwordActual);
 
         if (resultado.ok) {
-            alert("Nombre actualizado correctamente");
-            setAbierto(false);
+            setMensaje("Nombre actualizado correctamente");
+
             setNuevoNombre("");
             setPasswordActual("");
+
+            setTimeout(() => {
+                setAbierto(false);
+                setMensaje("");
+            }, 1500);
         } else {
             setError(resultado.mensaje);
         }
@@ -55,6 +68,12 @@ const Cambiarnombre = () => {
                         <h2 className="text-2xl font-black text-slate-900 mb-6">
                             Cambiar Nombre de Usuario
                         </h2>
+                        {mensaje && (
+                            <div className="bg-green-50 border border-green-200 text-green-600 text-sm p-3 rounded-xl mb-4">
+                                {mensaje}
+                            </div>
+                        )}
+
                         {error && (
                             <div className="bg-red-50 border border-red-200 text-red-600 text-sm p-3 rounded-xl mb-4">
                                 {error}

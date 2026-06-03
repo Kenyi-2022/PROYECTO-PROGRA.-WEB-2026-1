@@ -15,39 +15,57 @@ const Cambiarcorreo = () => {
     const handleGuardar = () => {
         setError("");
 
-        if (!nuevoCorreo.trim()) {
-            setError("Ingrese un correo válido.");
+        if (!user) {
+            setError("No hay sesión activa.");
+            return;
+        }
+
+        const correoNormalizado = nuevoCorreo.trim().toLowerCase();
+        const confirmarCorreoNormalizado = confirmarCorreo.trim().toLowerCase();
+
+        if (!correoNormalizado || !confirmarCorreoNormalizado || !passwordActual.trim()) {
+            setError("Completa todos los campos.");
             return;
         }
 
         const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        if (!regexCorreo.test(nuevoCorreo)) {
+        if (!regexCorreo.test(correoNormalizado)) {
             setError("Formato de correo inválido.");
             return;
         }
 
-        if (nuevoCorreo === user.correo) {
+        if (correoNormalizado !== confirmarCorreoNormalizado) {
+            setError("Los correos no coinciden.");
+            return;
+        }
+
+        if (correoNormalizado === user.correo.toLowerCase()) {
             setError("El nuevo correo debe ser diferente al actual.");
             return;
         }
 
         const resultado = cambiarCorreo(
-            nuevoCorreo,
-            confirmarCorreo,
+            correoNormalizado,
+            confirmarCorreoNormalizado,
             passwordActual
         );
 
         if (resultado.ok) {
             setMensaje("Correo actualizado correctamente");
-            setAbierto(false);
 
             setNuevoCorreo("");
             setConfirmarCorreo("");
             setPasswordActual("");
+
+            setTimeout(() => {
+                setAbierto(false);
+                setMensaje("");
+            }, 1500);
         } else {
             setError(resultado.mensaje);
         }
+
     };
 
     return (
