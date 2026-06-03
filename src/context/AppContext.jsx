@@ -11,7 +11,7 @@ const USUARIOS_DEFAULT = [
     carrerasRecomendadas: ["Ingeniería de Sistemas", "Economía", "Ingeniería Civil"],
     universidadesFavoritas: ["Universidad de Lima", "Universidad del Pacífico", "Universidad Nacional Mayor de San Marcos"],
     historialTests: [{ resultado: "Ingeniería de Sistemas y Computación", fecha: "12 enero 2026" }],
-    fechaTest: "12 enero 2026", ultimoIngreso: "25/05/2026"
+    fechaTest: "12 enero 2026", ultimoIngreso: "25/05/2026", notificacionesEmail: true, recordatorios: true, perfilPublico: true
   },
   {
     id: 2, nombres: "María", apellidos: "García López", correo: "profesor@ulima.edu.pe",
@@ -19,12 +19,13 @@ const USUARIOS_DEFAULT = [
     edad: "38", sexo: "Femenino", especialidad: "Ingeniería de Sistemas",
     gradoAcademico: "Magíster en Ingeniería de Software", aniosExperiencia: "12 años",
     estadoCuenta: "Activo", estudiantesAsignados: 24, testRevisados: 48, recursosCompartidos: 15,
-    historialTests: [], ultimoIngreso: "25/05/2026"
+    historialTests: [], ultimoIngreso: "25/05/2026", notificacionesEmail: true, recordatorios: true, perfilPublico: true
   },
   {
     id: 99, nombres: "Admin", apellidos: "VocaTest", correo: "admin@vocatest.pe",
     contraseña: "admin123", rol: "Admin", ciudad: "Lima", estadoCuenta: "Activo",
-    historialTests: [], ultimoIngreso: new Date().toLocaleDateString('es-PE')
+    historialTests: [], ultimoIngreso: new Date().toLocaleDateString('es-PE'),
+    notificacionesEmail: true, recordatorios: true, perfilPublico: true
   }
 ];
 
@@ -47,7 +48,17 @@ export function AppProvider({ children }) {
     }
 
     const sesionActiva = localStorage.getItem('vocatest_sesion');
-    if (sesionActiva) setUser(JSON.parse(sesionActiva));
+
+    if (sesionActiva) {
+      const u = JSON.parse(sesionActiva);
+
+      setUser({
+        ...u,
+        notificacionesEmail: u.notificacionesEmail ?? true,
+        recordatorios: u.recordatorios ?? true,
+        perfilPublico: u.perfilPublico ?? true
+      });
+    }
 
     const carreraGuardada = localStorage.getItem('carreraTemporal');
     if (carreraGuardada) setCarreraTemporal(carreraGuardada);
@@ -68,7 +79,13 @@ export function AppProvider({ children }) {
     const usuarios = JSON.parse(localStorage.getItem('vocatest_usuarios') || '[]');
     const encontrado = usuarios.find(u => u.correo === correo && u.contraseña === contraseña);
     if (encontrado) {
-      const actualizado = { ...encontrado, ultimoIngreso: new Date().toLocaleDateString('es-PE') };
+      const actualizado = {
+        ...encontrado,
+        ultimoIngreso: new Date().toLocaleDateString('es-PE'),
+        notificacionesEmail: encontrado.notificacionesEmail ?? true,
+        recordatorios: encontrado.recordatorios ?? true,
+        perfilPublico: encontrado.perfilPublico ?? true
+      };
       const actualizados = usuarios.map(u => u.id === actualizado.id ? actualizado : u);
       localStorage.setItem('vocatest_usuarios', JSON.stringify(actualizados));
       setUser(actualizado);
@@ -198,6 +215,85 @@ export function AppProvider({ children }) {
     }
   };
 
+  const cambiarNombre = (nuevoNombre, passwordActual) => {
+    if (!user) {
+      return { ok: false, mensaje: "No hay sesión activa." };
+    }
+
+    if (user.contraseña !== passwordActual) {
+      return { ok: false, mensaje: "La contraseña es incorrecta." };
+    }
+
+    editarUsuario(user.id, {
+      nombres: nuevoNombre
+    });
+
+    return { ok: true };
+  };
+
+  const cambiarCorreo = (nuevoCorreo, confirmarCorreo, passwordActual) => {
+    if (!user) {
+      return { ok: false, mensaje: "No hay sesión activa." };
+    }
+
+    if (nuevoCorreo !== confirmarCorreo) {
+      return { ok: false, mensaje: "Los correos no coinciden." };
+    }
+
+    if (user.contraseña !== passwordActual) {
+      return { ok: false, mensaje: "La contraseña es incorrecta." };
+    }
+
+    const usuarios = JSON.parse(localStorage.getItem('vocatest_usuarios') || '[]');
+
+    const existe = usuarios.find(
+      u => u.correo === nuevoCorreo && u.id !== user.id
+    );
+
+    if (existe) {
+      return { ok: false, mensaje: "Ese correo ya está registrado." };
+    }
+
+    editarUsuario(user.id, {
+      correo: nuevoCorreo
+    });
+
+    return { ok: true };
+  };
+
+  const cambiarPassword = (
+    passwordActual,
+    nuevaPassword,
+    confirmarPassword
+  ) => {
+    if (!user) {
+      return { ok: false, mensaje: "No hay sesión activa." };
+    }
+
+    if (user.contraseña !== passwordActual) {
+      return { ok: false, mensaje: "La contraseña actual es incorrecta." };
+    }
+
+    if (nuevaPassword !== confirmarPassword) {
+      return { ok: false, mensaje: "Las contraseñas no coinciden." };
+    }
+
+    const regexPassword = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+    if (!regexPassword.test(nuevaPassword)) {
+      return {
+        ok: false,
+        mensaje: "La contraseña debe tener al menos 8 caracteres, una mayúscula y un número."
+      };
+    }
+
+    editarUsuario(user.id, {
+      contraseña: nuevaPassword
+    });
+
+    return { ok: true };
+  };
+
   const eliminarUsuario = (id) => {
     const usuarios = JSON.parse(localStorage.getItem('vocatest_usuarios') || '[]');
     const filtrados = usuarios.filter(u => u.id !== id);
@@ -226,12 +322,34 @@ export function AppProvider({ children }) {
     return null;
   };
 
+  const actualizarPreferencias = (preferencias) => {
+    if (!user) return;
+
+    const usuarioActualizado = {
+      ...user,
+      ...preferencias
+    };
+
+    setUser(usuarioActualizado);
+    localStorage.setItem("vocatest_sesion", JSON.stringify(usuarioActualizado));
+
+    const usuarios = JSON.parse(localStorage.getItem('vocatest_usuarios') || '[]');
+
+    const actualizados = usuarios.map(u =>
+      u.id === usuarioActualizado.id ? usuarioActualizado : u
+    );
+
+    localStorage.setItem('vocatest_usuarios', JSON.stringify(actualizados));
+  };
+
   return (
     <AppContext.Provider value={{
       user, login, register, logout, marcarFavoritoContext, guardarResultadoTest,
       carreraTemporal, setCarreraTemporal, salas, crearSala, cerrarSala, eliminarSala, universidades, agregarUniversidad,
       editarUsuario, eliminarUsuario,
-      buscarCarreraGlobal // <-- Agregado al Provider
+      buscarCarreraGlobal,
+      cambiarNombre, cambiarCorreo, cambiarPassword,
+      actualizarPreferencias
     }}>
       {children}
     </AppContext.Provider>
