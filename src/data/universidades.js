@@ -173,7 +173,7 @@ const universidades = [
         facultad: "Ciencias e Ingeniería",
         duracion: "10 ciclos (5 años)",
         creditos: 222,
-        planEstudios: "/mallas/pucp-fisica.pdf",
+        planEstudios: "/mallas/pucp-mecatronica.pdf",
          descripcion: "Integración de sistemas mecánicos, electrónicos y de control."
       },
       {
