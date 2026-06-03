@@ -80,9 +80,7 @@ const PerfilEditar = () => {
       </div>
 
       <div className="flex items-center gap-3">
-        <span className="text-slate-600">
-          Carlos Mendoza Torres
-        </span>
+       <span className="text-slate-600">{user?.nombres} {user?.apellidos}</span>
 
        <Cambiarnombre/>
       </div>
@@ -110,9 +108,7 @@ const PerfilEditar = () => {
       </div>
 
       <div className="flex items-center gap-3 break-all">
-        <span className="text-slate-600">
-          estudiante@ulima.edu.pe
-        </span>
+        <span className="text-slate-600">{user?.correo}</span>
 
 <Cambiarcorreo/>
       </div>
