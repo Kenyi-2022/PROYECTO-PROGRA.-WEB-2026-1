@@ -30,7 +30,7 @@ const universidades = [
         facultad: "Ingeniería",
         duracion: "10 ciclos (5 años)",
         creditos: 215,
-        planEstudios: null,
+        planEstudios: "/mallas/ulima-industrial.pdf",
         descripcion: "Optimización de procesos productivos y gestión eficiente de recursos."
       },
       {
@@ -38,7 +38,7 @@ const universidades = [
         facultad: "Arquitectura",
         duracion: "10 ciclos (5 años)",
         creditos: 230,
-        planEstudios: null,
+        planEstudios: "/mallas/ulima-arquitectura.pdf",
         descripcion: "Diseño y planificación de espacios habitables con enfoque sostenible."
       },
       {
@@ -54,7 +54,7 @@ const universidades = [
         facultad: "Comunicación",
         duracion: "10 ciclos (5 años)",
         creditos: 205,
-        planEstudios: null,
+        planEstudios: "null",
         descripcion: "Estrategias de mercado, branding y comportamiento del consumidor."
       },
       {
@@ -62,7 +62,7 @@ const universidades = [
         facultad: "Economía",
         duracion: "10 ciclos (5 años)",
         creditos: 210,
-        planEstudios: null,
+        planEstudios: "/mallas/ulima-economia.pdf",
         descripcion: "Análisis económico, políticas públicas y mercados financieros."
       },
       {
@@ -70,7 +70,7 @@ const universidades = [
         facultad: "Derecho",
         duracion: "10 ciclos (5 años)",
         creditos: 220,
-        planEstudios: null,
+        planEstudios: "/mallas/ulima-derecho.pdf",
         descripcion: "Formación jurídica integral con enfoque en derecho corporativo."
       },
       {
@@ -78,7 +78,7 @@ const universidades = [
         facultad: "Psicología",
         duracion: "10 ciclos (5 años)",
         creditos: 200,
-        planEstudios: null,
+        planEstudios: "/mallas/ulima-psicologia.pdf",
         descripcion: "Comprensión del comportamiento humano y salud mental."
       },
       {
@@ -86,7 +86,7 @@ const universidades = [
         facultad: "Negocios",
         duracion: "10 ciclos (5 años)",
         creditos: 205,
-        planEstudios: null,
+        planEstudios: "/mallas/ulima-contabilidad.pdf",
         descripcion: "Gestión financiera, auditoría y contabilidad empresarial."
       },
       {
@@ -94,7 +94,7 @@ const universidades = [
         facultad: "Comunicación",
         duracion: "10 ciclos (5 años)",
         creditos: 200,
-        planEstudios: null,
+        planEstudios: "/mallas/ulima-comunicacion.pdf",
         descripcion: "Comunicación estratégica, periodismo y medios digitales."
       }
     ]
@@ -122,7 +122,7 @@ const universidades = [
     carreras: [
       {
         nombre: "Ingeniería Informática",
-        facultad: "Ciencias e Ingeniería",
+        facultad: "Ingeniería",
         duracion: "10 ciclos (5 años)",
         creditos: 218,
         planEstudios: "/mallas/pucp-informatica.pdf",
@@ -130,18 +130,18 @@ const universidades = [
       },
       {
         nombre: "Ingeniería Civil",
-        facultad: "Ciencias e Ingeniería",
+        facultad: "Ingeniería",
         duracion: "10 ciclos (5 años)",
         creditos: 225,
-        planEstudios: null,
+        planEstudios: "/mallas/pucp-civil.pdf",
         descripcion: "Diseño y construcción de infraestructura civil sostenible."
       },
       {
         nombre: "Arquitectura",
-        facultad: "Arquitectura y Urbanismo",
+        facultad: "Arquitectura",
         duracion: "10 ciclos (5 años)",
         creditos: 230,
-        planEstudios: null,
+        planEstudios:"/mallas/pucp-arquitectura.pdf",
         descripcion: "Arquitectura con enfoque en diseño urbano y sostenibilidad."
       },
       {
@@ -149,7 +149,7 @@ const universidades = [
         facultad: "Ciencias Sociales",
         duracion: "10 ciclos (5 años)",
         creditos: 200,
-        planEstudios: null,
+        planEstudios: "/mallas/pucp-economia.pdf",
         descripcion: "Economía aplicada, política económica y desarrollo social."
       },
       {
@@ -157,7 +157,7 @@ const universidades = [
         facultad: "Psicología",
         duracion: "10 ciclos (5 años)",
         creditos: 205,
-        planEstudios: null,
+        planEstudios: "/mallas/pucp-psciologia.pdf",
         descripcion: "Psicología clínica, educativa y organizacional."
       },
       {
@@ -165,45 +165,45 @@ const universidades = [
         facultad: "Derecho",
         duracion: "10 ciclos (5 años)",
         creditos: 220,
-        planEstudios: null,
+        planEstudios: "/mallas/pucp-derecho.pdf",
         descripcion: "Derecho constitucional, civil y corporativo."
       },
       {
-        nombre: "Ingeniería Mecatrónica",
+        nombre: "Ingenieria Mecatronica",
         facultad: "Ciencias e Ingeniería",
         duracion: "10 ciclos (5 años)",
         creditos: 222,
-        planEstudios: null,
-        descripcion: "Integración de sistemas mecánicos, electrónicos y de control."
+        planEstudios: "/mallas/pucp-fisica.pdf",
+         descripcion: "Integración de sistemas mecánicos, electrónicos y de control."
       },
       {
         nombre: "Diseño Gráfico",
         facultad: "Arte y Diseño",
         duracion: "10 ciclos (5 años)",
         creditos: 198,
-        planEstudios: null,
+        planEstudios: "/mallas/pucp-diseño.pdf",
         descripcion: "Diseño visual, identidad de marca y comunicación gráfica."
       },
       {
         nombre: "Comunicación Audiovisual",
-        facultad: "Ciencias y Artes de la Comunicación",
+        facultad: "Comunicación",
         duracion: "10 ciclos (5 años)",
         creditos: 200,
-        planEstudios: null,
+        planEstudios: "/mallas/pucp-comunicacion.pdf",
         descripcion: "Producción audiovisual, cine y medios digitales."
       },
       {
-        nombre: "Gestión y Alta Dirección",
-        facultad: "Gestión y Alta Dirección",
+        nombre: "Administración",
+        facultad: "Negocios",
         duracion: "10 ciclos (5 años)",
         creditos: 210,
-        planEstudios: null,
-        descripcion: "Gestión de organizaciones con enfoque estratégico y social."
+        planEstudios: "/mallas/pucp-administracion.pdf",
+        descripcion: "Gestión empresarial con enfoque en responsabilidad social."
       }
     ]
   },
 
-  {
+   {
     id: 3,
     nombre: "Universidad Nacional Mayor de San Marcos",
     tipo: "Pública",
@@ -239,7 +239,7 @@ const universidades = [
         facultad: "Derecho",
         duracion: "10 ciclos (5 años)",
         creditos: 215,
-        planEstudios: null,
+        planEstudios: "/mallas/unmsm-derecho.pdf",
         descripcion: "Formación jurídica con enfoque en derecho público y privado."
       },
       {
@@ -247,7 +247,7 @@ const universidades = [
         facultad: "Farmacia y Bioquímica",
         duracion: "10 ciclos (5 años)",
         creditos: 220,
-        planEstudios: null,
+        planEstudios: "/mallas/unmsm-farmacia.pdf",
         descripcion: "Ciencias farmacéuticas y bioquímica aplicada."
       },
       {
@@ -255,7 +255,7 @@ const universidades = [
         facultad: "Psicología",
         duracion: "10 ciclos (5 años)",
         creditos: 200,
-        planEstudios: null,
+        planEstudios: "/mallas/unmsm-psicologia.pdf",
         descripcion: "Psicología clínica y comunitaria con enfoque social."
       },
       {
@@ -263,7 +263,7 @@ const universidades = [
         facultad: "Administración",
         duracion: "10 ciclos (5 años)",
         creditos: 205,
-        planEstudios: null,
+        planEstudios: "/mallas/unmsm-administracion.pdf",
         descripcion: "Gestión pública y privada con visión estratégica."
       },
       {
@@ -271,7 +271,7 @@ const universidades = [
         facultad: "Ciencias Contables",
         duracion: "10 ciclos (5 años)",
         creditos: 205,
-        planEstudios: null,
+        planEstudios: "/mallas/unmsm-contabilidad.pdf",
         descripcion: "Contabilidad, auditoría y finanzas corporativas."
       },
       {
@@ -279,7 +279,7 @@ const universidades = [
         facultad: "Odontología",
         duracion: "10 ciclos (5 años)",
         creditos: 215,
-        planEstudios: null,
+        planEstudios: "/mallas/unmsm-odontologia.pdf",
         descripcion: "Salud oral y odontología clínica integral."
       },
       {
@@ -287,7 +287,7 @@ const universidades = [
         facultad: "Ingeniería",
         duracion: "10 ciclos (5 años)",
         creditos: 210,
-        planEstudios: null,
+        planEstudios: "https://industrial.unmsm.edu.pe/escuelas-profesionales/epii/plan-de-estudios-eap-ingenieria-industrial-2023/",
         descripcion: "Optimización industrial y gestión de operaciones."
       },
       {
@@ -295,7 +295,7 @@ const universidades = [
         facultad: "Ciencias Biológicas",
         duracion: "10 ciclos (5 años)",
         creditos: 200,
-        planEstudios: null,
+        planEstudios: "/mallas/unmsm-biologia.pdf",
         descripcion: "Biología molecular, ecología y ciencias de la vida."
       }
     ]
@@ -329,7 +329,7 @@ const universidades = [
         facultad: "Ingeniería Civil",
         duracion: "10 ciclos (5 años)",
         creditos: 230,
-        planEstudios: null,
+        planEstudios: "/mallas/uni-civil.pdf",
         descripcion: "Infraestructura civil, estructuras y gestión de proyectos."
       },
       {
@@ -337,7 +337,7 @@ const universidades = [
         facultad: "Ingeniería Industrial",
         duracion: "10 ciclos (5 años)",
         creditos: 215,
-        planEstudios: null,
+        planEstudios: "/mallas/uni-industrial.pdf",
         descripcion: "Procesos productivos y optimización de sistemas industriales."
       },
       {
@@ -345,7 +345,7 @@ const universidades = [
         facultad: "Arquitectura",
         duracion: "10 ciclos (5 años)",
         creditos: 225,
-        planEstudios: null,
+        planEstudios: "/mallas/uni-industrial.pdf",
         descripcion: "Arquitectura, urbanismo y diseño ambiental."
       },
       {
@@ -353,7 +353,7 @@ const universidades = [
         facultad: "Ingeniería Mecánica",
         duracion: "10 ciclos (5 años)",
         creditos: 220,
-        planEstudios: null,
+        planEstudios: "/mallas/uni-mecanica.pdf",
         descripcion: "Diseño mecánico, termodinámica y manufactura."
       },
       {
@@ -361,7 +361,7 @@ const universidades = [
         facultad: "Ingeniería Electrónica",
         duracion: "10 ciclos (5 años)",
         creditos: 218,
-        planEstudios: null,
+        planEstudios: "/mallas/uni-electronica.pdf",
         descripcion: "Electrónica, telecomunicaciones y sistemas embebidos."
       },
       {
@@ -369,7 +369,7 @@ const universidades = [
         facultad: "Ingeniería Química",
         duracion: "10 ciclos (5 años)",
         creditos: 215,
-        planEstudios: null,
+        planEstudios: "/mallas/uni-quimica.pdf",
         descripcion: "Procesos químicos industriales y química aplicada."
       },
       {
@@ -377,7 +377,7 @@ const universidades = [
         facultad: "Ingeniería Ambiental",
         duracion: "10 ciclos (5 años)",
         creditos: 210,
-        planEstudios: null,
+        planEstudios: "/mallas/uni-ambiental.pdf",
         descripcion: "Gestión ambiental y desarrollo sostenible."
       },
       {
@@ -385,7 +385,7 @@ const universidades = [
         facultad: "Ingeniería Electrónica",
         duracion: "10 ciclos (5 años)",
         creditos: 215,
-        planEstudios: null,
+        planEstudios: "/mallas/uni-Telecomunicaciones.pdf",
         descripcion: "Redes de comunicación, fibra óptica y sistemas inalámbricos."
       },
       {
@@ -393,7 +393,7 @@ const universidades = [
         facultad: "Ingeniería Económica",
         duracion: "10 ciclos (5 años)",
         creditos: 205,
-        planEstudios: null,
+        planEstudios: "https://acreditacion.uni.edu.pe/es/economics/curriculum/",
         descripcion: "Economía aplicada a proyectos de ingeniería."
       }
     ]
@@ -429,7 +429,7 @@ const universidades = [
         facultad: "Diseño",
         duracion: "10 ciclos (5 años)",
         creditos: 195,
-        planEstudios: null,
+        planEstudios: "/mallas/upc-diseño.pdf",
         descripcion: "Diseño digital, UX/UI y comunicación visual."
       },
       {
@@ -437,7 +437,7 @@ const universidades = [
         facultad: "Negocios",
         duracion: "10 ciclos (5 años)",
         creditos: 205,
-        planEstudios: null,
+        planEstudios: "/mallas/upc-negocios.pdf",
         descripcion: "Comercio exterior, logística internacional y finanzas globales."
       },
       {
@@ -445,7 +445,7 @@ const universidades = [
         facultad: "Comunicación",
         duracion: "10 ciclos (5 años)",
         creditos: 198,
-        planEstudios: null,
+        planEstudios: "/mallas/upc-comunicacion.pdf",
         descripcion: "Comunicación corporativa, periodismo y medios digitales."
       },
       {
@@ -453,7 +453,7 @@ const universidades = [
         facultad: "Arquitectura",
         duracion: "10 ciclos (5 años)",
         creditos: 225,
-        planEstudios: null,
+        planEstudios: "/mallas/upc-arquitectura.pdf",
         descripcion: "Arquitectura sostenible y diseño urbano contemporáneo."
       },
       {
@@ -461,7 +461,7 @@ const universidades = [
         facultad: "Psicología",
         duracion: "10 ciclos (5 años)",
         creditos: 200,
-        planEstudios: null,
+        planEstudios: "/mallas/upc-psicologia.pdf",
         descripcion: "Psicología organizacional y clínica."
       },
       {
@@ -469,7 +469,7 @@ const universidades = [
         facultad: "Negocios",
         duracion: "10 ciclos (5 años)",
         creditos: 205,
-        planEstudios: null,
+        planEstudios: "/mallas/upc-administracion.pdf",
         descripcion: "Administración moderna con enfoque en liderazgo y tecnología."
       },
       {
@@ -477,7 +477,7 @@ const universidades = [
         facultad: "Marketing",
         duracion: "10 ciclos (5 años)",
         creditos: 200,
-        planEstudios: null,
+        planEstudios: "/mallas/upc-marketing.pdf",
         descripcion: "Marketing digital, e-commerce y estrategia de marca."
       },
       {
@@ -485,7 +485,7 @@ const universidades = [
         facultad: "Ingeniería",
         duracion: "10 ciclos (5 años)",
         creditos: 220,
-        planEstudios: null,
+        planEstudios: "/mallas/upc-civil.pdf",
         descripcion: "Construcción, gestión de proyectos civiles y BIM."
       },
       {
@@ -493,7 +493,7 @@ const universidades = [
         facultad: "Derecho",
         duracion: "10 ciclos (5 años)",
         creditos: 215,
-        planEstudios: null,
+        planEstudios: "/mallas/upc-derecho.pdf",
         descripcion: "Derecho empresarial y nuevas tecnologías jurídicas."
       }
     ]
@@ -516,16 +516,16 @@ const universidades = [
       { escala: "Escala D", rango: "S/. 1,000 - S/. 1,400 mensual" },
     ],
     carreras: [
-      { nombre: "Gastronomía", facultad: "Hotelería y Turismo", duracion: "8 ciclos (4 años)", creditos: 185, planEstudios: null, descripcion: "Arte culinario, gestión gastronómica y cocina internacional." },
-      { nombre: "Administración", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 205, planEstudios: null, descripcion: "Administración con enfoque emprendedor e innovación." },
-      { nombre: "Marketing", facultad: "Marketing", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: null, descripcion: "Marketing experiencial y estrategia digital." },
-      { nombre: "Ingeniería Empresarial", facultad: "Ingeniería", duracion: "10 ciclos (5 años)", creditos: 210, planEstudios: null, descripcion: "Ingeniería aplicada a la gestión empresarial." },
-      { nombre: "Comunicaciones", facultad: "Comunicación", duracion: "10 ciclos (5 años)", creditos: 198, planEstudios: null, descripcion: "Comunicación estratégica y relaciones públicas." },
-      { nombre: "Arquitectura", facultad: "Arquitectura", duracion: "10 ciclos (5 años)", creditos: 225, planEstudios: null, descripcion: "Arquitectura con énfasis en diseño sostenible." },
-      { nombre: "Derecho", facultad: "Derecho", duracion: "10 ciclos (5 años)", creditos: 215, planEstudios: null, descripcion: "Derecho corporativo y relaciones internacionales." },
-      { nombre: "Psicología", facultad: "Psicología", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: null, descripcion: "Psicología organizacional y del consumidor." },
-      { nombre: "Negocios Internacionales", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 205, planEstudios: null, descripcion: "Comercio internacional y cadenas de suministro globales." },
-      { nombre: "Contabilidad", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: null, descripcion: "Contabilidad financiera y tributación empresarial." }
+      { nombre: "Gastronomía", facultad: "Hotelería y Turismo", duracion: "8 ciclos (4 años)", creditos: 185, planEstudios: "https://usil.edu.pe/pregrado/arte-culinario/", descripcion: "Arte culinario, gestión gastronómica y cocina internacional." },
+      { nombre: "Administración", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 205, planEstudios: "/mallas/usil-administracion.pdf", descripcion: "Administración con enfoque emprendedor e innovación." },
+      { nombre: "Marketing", facultad: "Marketing", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: "/mallas/usil-marketing.pdf", descripcion: "Marketing experiencial y estrategia digital." },
+      { nombre: "Ingeniería Empresarial", facultad: "Ingeniería", duracion: "10 ciclos (5 años)", creditos: 210, planEstudios: "/mallas/usil-empresarial.pdf", descripcion: "Ingeniería aplicada a la gestión empresarial." },
+      { nombre: "Comunicaciones", facultad: "Comunicación", duracion: "10 ciclos (5 años)", creditos: 198, planEstudios: "https://usil.edu.pe/cpel/comunicacion-publicidad/", descripcion: "Comunicación estratégica y relaciones públicas." },
+      { nombre: "Arquitectura", facultad: "Arquitectura", duracion: "10 ciclos (5 años)", creditos: 225, planEstudios: "http://blogs.usil.edu.pe/facultad-arquitectura/arquitectura-urbanismo-y-territorio/malla-curricular-carrera-arquitectura-urbanismo-y-territorio", descripcion: "Arquitectura con énfasis en diseño sostenible." },
+      { nombre: "Derecho", facultad: "Derecho", duracion: "10 ciclos (5 años)", creditos: 215, planEstudios: "/mallas/usil-derecho.pdf", descripcion: "Derecho corporativo y relaciones internacionales." },
+      { nombre: "Psicología", facultad: "Psicología", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: "https://usil.edu.pe/cpel/psicologia-humana/", descripcion: "Psicología organizacional y del consumidor." },
+      { nombre: "Negocios Internacionales", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 205, planEstudios: "/mallas/usil-negocios.pdf", descripcion: "Comercio internacional y cadenas de suministro globales." },
+      { nombre: "Contabilidad", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: "/mallas/usil-contabilidad.pdf", descripcion: "Contabilidad financiera y tributación empresarial." }
     ]
   },
 
@@ -546,16 +546,16 @@ const universidades = [
       { escala: "Escala D", rango: "S/. 800 - S/. 1,200 mensual" },
     ],
     carreras: [
-      { nombre: "Medicina", facultad: "Medicina", duracion: "14 ciclos (7 años)", creditos: 340, planEstudios: null, descripcion: "Medicina clínica y salud preventiva." },
-      { nombre: "Arquitectura", facultad: "Arquitectura", duracion: "10 ciclos (5 años)", creditos: 225, planEstudios: null, descripcion: "Arquitectura y urbanismo contemporáneo." },
-      { nombre: "Ingeniería Informática", facultad: "Ingeniería", duracion: "10 ciclos (5 años)", creditos: 210, planEstudios: null, descripcion: "Sistemas de información y desarrollo tecnológico." },
-      { nombre: "Psicología", facultad: "Psicología", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: null, descripcion: "Psicología clínica y educativa." },
-      { nombre: "Derecho", facultad: "Derecho", duracion: "10 ciclos (5 años)", creditos: 215, planEstudios: null, descripcion: "Derecho penal, civil y constitucional." },
-      { nombre: "Administración", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 205, planEstudios: null, descripcion: "Gestión empresarial y dirección estratégica." },
-      { nombre: "Marketing", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 198, planEstudios: null, descripcion: "Investigación de mercados y publicidad." },
-      { nombre: "Contabilidad", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: null, descripcion: "Contabilidad y auditoría empresarial." },
-      { nombre: "Traducción", facultad: "Humanidades", duracion: "10 ciclos (5 años)", creditos: 190, planEstudios: null, descripcion: "Traducción e interpretación en múltiples idiomas." },
-      { nombre: "Biología", facultad: "Ciencias Biológicas", duracion: "10 ciclos (5 años)", creditos: 205, planEstudios: null, descripcion: "Biología aplicada y biotecnología." }
+      { nombre: "Medicina", facultad: "Medicina", duracion: "14 ciclos (7 años)", creditos: 340, planEstudios: "/mallas/urp-medicina.pdf", descripcion: "Medicina clínica y salud preventiva." },
+      { nombre: "Arquitectura", facultad: "Arquitectura", duracion: "10 ciclos (5 años)", creditos: 225, planEstudios: "/mallas/urp-arquitectura.pdf", descripcion: "Arquitectura y urbanismo contemporáneo." },
+      { nombre: "Ingeniería Informática", facultad: "Ingeniería", duracion: "10 ciclos (5 años)", creditos: 210, planEstudios: "/mallas/urp-informatica.pdf", descripcion: "Sistemas de información y desarrollo tecnológico." },
+      { nombre: "Psicología", facultad: "Psicología", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: "/mallas/urp-psicologia.pdf", descripcion: "Psicología clínica y educativa." },
+      { nombre: "Derecho", facultad: "Derecho", duracion: "10 ciclos (5 años)", creditos: 215, planEstudios: "/mallas/urp-derecho.pdf", descripcion: "Derecho penal, civil y constitucional." },
+      { nombre: "Administración", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 205, planEstudios: "/mallas/urp-administracion.pdf", descripcion: "Gestión empresarial y dirección estratégica." },
+      { nombre: "Marketing", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 198, planEstudios: "/mallas/urp-marketing.pdf", descripcion: "Investigación de mercados y publicidad." },
+      { nombre: "Contabilidad", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: "/mallas/urp-contabilidad.pdf", descripcion: "Contabilidad y auditoría empresarial." },
+      { nombre: "Traducción", facultad: "Humanidades", duracion: "10 ciclos (5 años)", creditos: 190, planEstudios: "/mallas/urp-traduccion.pdf", descripcion: "Traducción e interpretación en múltiples idiomas." },
+      { nombre: "Biología", facultad: "Ciencias Biológicas", duracion: "10 ciclos (5 años)", creditos: 205, planEstudios: "/mallas/urp-biologia.pdf", descripcion: "Biología aplicada y biotecnología." }
     ]
   },
 
@@ -575,16 +575,16 @@ const universidades = [
       { escala: "Escala C", rango: "S/. 1,200 - S/. 1,700 mensual" },
     ],
     carreras: [
-      { nombre: "Medicina", facultad: "Medicina", duracion: "14 ciclos (7 años)", creditos: 340, planEstudios: null, descripcion: "Medicina general con énfasis en investigación científica." },
-      { nombre: "Odontología", facultad: "Ciencias de la Salud", duracion: "10 ciclos (5 años)", creditos: 210, planEstudios: null, descripcion: "Salud bucal y odontología preventiva." },
-      { nombre: "Psicología", facultad: "Psicología", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: null, descripcion: "Psicología clínica y neuropsicología." },
-      { nombre: "Ingeniería Ambiental", facultad: "Ingeniería", duracion: "10 ciclos (5 años)", creditos: 210, planEstudios: null, descripcion: "Gestión ambiental y sostenibilidad." },
-      { nombre: "Administración", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: null, descripcion: "Administración con enfoque en innovación." },
-      { nombre: "Marketing", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 195, planEstudios: null, descripcion: "Marketing digital y analítica de datos." },
-      { nombre: "Veterinaria", facultad: "Veterinaria", duracion: "10 ciclos (5 años)", creditos: 220, planEstudios: null, descripcion: "Medicina veterinaria y zootecnia." },
-      { nombre: "Nutrición", facultad: "Ciencias de la Salud", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: null, descripcion: "Nutrición clínica y salud pública." },
-      { nombre: "Derecho", facultad: "Derecho", duracion: "10 ciclos (5 años)", creditos: 210, planEstudios: null, descripcion: "Derecho ambiental y corporativo." },
-      { nombre: "Biología Marina", facultad: "Ciencias Ambientales", duracion: "10 ciclos (5 años)", creditos: 210, planEstudios: null, descripcion: "Ecosistemas marinos y recursos hidrobiológicos." }
+      { nombre: "Medicina", facultad: "Medicina", duracion: "14 ciclos (7 años)", creditos: 340, planEstudios: "/mallas/cientifica-medicina.pdf", descripcion: "Medicina general con énfasis en investigación científica." },
+      { nombre: "Odontología", facultad: "Ciencias de la Salud", duracion: "10 ciclos (5 años)", creditos: 210, planEstudios: "/mallas/cientifica-odontologia.pdf", descripcion: "Salud bucal y odontología preventiva." },
+      { nombre: "Psicología", facultad: "Psicología", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: "/mallas/cientifica-psicologia.pdf", descripcion: "Psicología clínica y neuropsicología." },
+      { nombre: "Ingeniería Ambiental", facultad: "Ingeniería", duracion: "10 ciclos (5 años)", creditos: 210, planEstudios: "/mallas/cientifica-ambiental.pdf", descripcion: "Gestión ambiental y sostenibilidad." },
+      { nombre: "Administración", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: "/mallas/cientifica-administracion.pdf", descripcion: "Administración con enfoque en innovación." },
+      { nombre: "Marketing", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 195, planEstudios: "/mallas/cientifica-marketing.pdf", descripcion: "Marketing digital y analítica de datos." },
+      { nombre: "Veterinaria", facultad: "Veterinaria", duracion: "10 ciclos (5 años)", creditos: 220, planEstudios: "/mallas/cientifica-veterinaria.pdf", descripcion: "Medicina veterinaria y zootecnia." },
+      { nombre: "Nutrición", facultad: "Ciencias de la Salud", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: "/mallas/cientifica-nutrcion.pdf", descripcion: "Nutrición clínica y salud pública." },
+      { nombre: "Derecho", facultad: "Derecho", duracion: "10 ciclos (5 años)", creditos: 210, planEstudios:  "/mallas/cientifica-derecho.pdf", descripcion: "Derecho ambiental y corporativo." },
+      { nombre: "Biología Marina", facultad: "Ciencias Ambientales", duracion: "10 ciclos (5 años)", creditos: 210, planEstudios: "/mallas/cientifica-biologia.pdf", descripcion: "Ecosistemas marinos y recursos hidrobiológicos." }
     ]
   },
 
@@ -605,16 +605,16 @@ const universidades = [
       { escala: "Escala D", rango: "S/. 1,000 - S/. 1,600 mensual" },
     ],
     carreras: [
-      { nombre: "Administración", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 210, planEstudios: null, descripcion: "Administración de empresas con visión global." },
-      { nombre: "Ingeniería de Tecnologías", facultad: "Ingeniería", duracion: "10 ciclos (5 años)", creditos: 212, planEstudios: null, descripcion: "Tecnologías de información aplicadas a los negocios." },
-      { nombre: "Marketing", facultad: "Marketing", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: null, descripcion: "Marketing estratégico y gestión comercial." },
-      { nombre: "Economía", facultad: "Economía", duracion: "10 ciclos (5 años)", creditos: 205, planEstudios: null, descripcion: "Economía empresarial y análisis financiero." },
-      { nombre: "Negocios Internacionales", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 205, planEstudios: null, descripcion: "Comercio global, finanzas internacionales." },
-      { nombre: "Contabilidad", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: null, descripcion: "Contabilidad corporativa y finanzas." },
-      { nombre: "Ingeniería Industrial", facultad: "Ingeniería", duracion: "10 ciclos (5 años)", creditos: 215, planEstudios: null, descripcion: "Gestión de operaciones e ingeniería de procesos." },
-      { nombre: "Finanzas", facultad: "Finanzas", duracion: "10 ciclos (5 años)", creditos: 205, planEstudios: null, descripcion: "Mercados financieros, inversiones y banca." },
-      { nombre: "Derecho Corporativo", facultad: "Derecho", duracion: "10 ciclos (5 años)", creditos: 215, planEstudios: null, descripcion: "Derecho empresarial y regulatorio." },
-      { nombre: "Comunicación", facultad: "Comunicación", duracion: "10 ciclos (5 años)", creditos: 195, planEstudios: null, descripcion: "Comunicación corporativa y relaciones institucionales." }
+      { nombre: "Administración", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 210, planEstudios: "/mallas/esan-administracion", descripcion: "Administración de empresas con visión global." },
+      { nombre: "Ingeniería de Tecnologías", facultad: "Ingeniería", duracion: "10 ciclos (5 años)", creditos: 212, planEstudios: "/mallas/esan-tecnologias", descripcion: "Tecnologías de información aplicadas a los negocios." },
+      { nombre: "Marketing", facultad: "Marketing", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: "/mallas/esan-marketing", descripcion: "Marketing estratégico y gestión comercial." },
+      { nombre: "Economía", facultad: "Economía", duracion: "10 ciclos (5 años)", creditos: 205, planEstudios: "https://www.ue.edu.pe/pregrado/carreras/economia", descripcion: "Economía empresarial y análisis financiero." },
+      { nombre: "Negocios Internacionales", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 205, planEstudios: "/mallas/esan-negocios", descripcion: "Comercio global, finanzas internacionales." },
+      { nombre: "Contabilidad", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: "/mallas/esan-contabilidad", descripcion: "Contabilidad corporativa y finanzas." },
+      { nombre: "Ingeniería Industrial", facultad: "Ingeniería", duracion: "10 ciclos (5 años)", creditos: 215, planEstudios: "https://www.ue.edu.pe/pregrado/carreras/ingenieria-industrial-comercial", descripcion: "Gestión de operaciones e ingeniería de procesos." },
+      { nombre: "Finanzas", facultad: "Finanzas", duracion: "10 ciclos (5 años)", creditos: 205, planEstudios: "/mallas/esan-finanzas", descripcion: "Mercados financieros, inversiones y banca." },
+      { nombre: "Derecho Corporativo", facultad: "Derecho", duracion: "10 ciclos (5 años)", creditos: 215, planEstudios: "https://www.ue.edu.pe/pregrado/carreras/derecho-corporativo", descripcion: "Derecho empresarial y regulatorio." },
+      { nombre: "Comunicación", facultad: "Comunicación", duracion: "10 ciclos (5 años)", creditos: 195, planEstudios: "/mallas/esan-comunicacion", descripcion: "Comunicación corporativa y relaciones institucionales." }
     ]
   },
 
@@ -635,16 +635,16 @@ const universidades = [
       { escala: "Escala D", rango: "S/. 700 - S/. 1,000 mensual" },
     ],
     carreras: [
-      { nombre: "Derecho", facultad: "Derecho", duracion: "10 ciclos (5 años)", creditos: 215, planEstudios: null, descripcion: "Derecho civil, penal y empresarial." },
-      { nombre: "Ingeniería de Computación", facultad: "Ingeniería", duracion: "10 ciclos (5 años)", creditos: 210, planEstudios: null, descripcion: "Computación, redes y sistemas de información." },
-      { nombre: "Medicina", facultad: "Medicina", duracion: "14 ciclos (7 años)", creditos: 340, planEstudios: null, descripcion: "Medicina clínica y salud comunitaria." },
-      { nombre: "Arquitectura", facultad: "Arquitectura", duracion: "10 ciclos (5 años)", creditos: 225, planEstudios: null, descripcion: "Arquitectura y diseño de interiores." },
-      { nombre: "Contabilidad", facultad: "Ciencias Contables", duracion: "10 ciclos (5 años)", creditos: 205, planEstudios: null, descripcion: "Contabilidad, auditoría y tributación." },
-      { nombre: "Psicología", facultad: "Psicología", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: null, descripcion: "Psicología clínica, educativa y forense." },
-      { nombre: "Administración", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 205, planEstudios: null, descripcion: "Gestión empresarial y emprendimiento." },
-      { nombre: "Marketing", facultad: "Marketing", duracion: "10 ciclos (5 años)", creditos: 198, planEstudios: null, descripcion: "Marketing digital y gestión de marca." },
-      { nombre: "Odontología", facultad: "Odontología", duracion: "10 ciclos (5 años)", creditos: 215, planEstudios: null, descripcion: "Odontología general y especializada." },
-      { nombre: "Turismo y Hotelería", facultad: "Turismo", duracion: "10 ciclos (5 años)", creditos: 195, planEstudios: null, descripcion: "Gestión hotelera y turismo sostenible." }
+      { nombre: "Derecho", facultad: "Derecho", duracion: "10 ciclos (5 años)", creditos: 215, planEstudios: "https://derecho.usmp.edu.pe/plan_de_estudios/", descripcion: "Derecho civil, penal y empresarial." },
+      { nombre: "Ingeniería de Computación", facultad: "Ingeniería", duracion: "10 ciclos (5 años)", creditos: 210, planEstudios: "/mallas/usmp-computacion", descripcion: "Computación, redes y sistemas de información." },
+      { nombre: "Medicina", facultad: "Medicina", duracion: "14 ciclos (7 años)", creditos: 340, planEstudios: "/mallas/usmp-medicina", descripcion: "Medicina clínica y salud comunitaria." },
+      { nombre: "Arquitectura", facultad: "Arquitectura", duracion: "10 ciclos (5 años)", creditos: 225, planEstudios: "/mallas/usmp-arquitectura", descripcion: "Arquitectura y diseño de interiores." },
+      { nombre: "Contabilidad", facultad: "Ciencias Contables", duracion: "10 ciclos (5 años)", creditos: 205, planEstudios: "/mallas/usmp-contabilidad", descripcion: "Contabilidad, auditoría y tributación." },
+      { nombre: "Psicología", facultad: "Psicología", duracion: "10 ciclos (5 años)", creditos: 200, planEstudios: "/mallas/usmp-psicologia", descripcion: "Psicología clínica, educativa y forense." },
+      { nombre: "Administración", facultad: "Negocios", duracion: "10 ciclos (5 años)", creditos: 205, planEstudios: "/mallas/usmp-gestion", descripcion: "Gestión empresarial y emprendimiento." },
+      { nombre: "Marketing", facultad: "Marketing", duracion: "10 ciclos (5 años)", creditos: 198, planEstudios: "/mallas/usmp-marketing", descripcion: "Marketing digital y gestión de marca." },
+      { nombre: "Odontología", facultad: "Odontología", duracion: "10 ciclos (5 años)", creditos: 215, planEstudios: "/mallas/usmp-odontologia", descripcion: "Odontología general y especializada." },
+      { nombre: "Turismo y Hotelería", facultad: "Turismo", duracion: "10 ciclos (5 años)", creditos: 195, planEstudios: "/mallas/usmp-turismo", descripcion: "Gestión hotelera y turismo sostenible." }
     ]
   }
 ];
