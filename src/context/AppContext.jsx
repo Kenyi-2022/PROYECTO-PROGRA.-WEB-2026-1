@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import universidadesData from '../data/universidades';
+import { iniciarSesion } from '../services/api';
 
 const AppContext = createContext();
 
@@ -83,27 +84,51 @@ export function AppProvider({ children }) {
     }
   }, []);
 
-  const login = (correo, contraseña) => {
-    const usuarios = JSON.parse(localStorage.getItem('vocatest_usuarios') || '[]');
-    const correoNormalizado = correo.trim().toLowerCase();
-    const encontrado = usuarios.find(u => u.correo.toLowerCase() === correoNormalizado && u.contraseña === contraseña);
-    
-    if (encontrado) {
-      const actualizado = {
-        ...encontrado,
-        ultimoIngreso: new Date().toLocaleDateString('es-PE'),
-        notificacionesEmail: encontrado.notificacionesEmail ?? true,
-        recordatorios: encontrado.recordatorios ?? true,
-        perfilPublico: encontrado.perfilPublico ?? true
-      };
-      const actualizados = usuarios.map(u => u.id === actualizado.id ? actualizado : u);
-      localStorage.setItem('vocatest_usuarios', JSON.stringify(actualizados));
-      setUser(actualizado);
-      localStorage.setItem('vocatest_sesion', JSON.stringify(actualizado));
-      return { ok: true, rol: actualizado.rol };
-    }
-    return { ok: false };
-  };
+const login = async (correo, contrasena) => {
+  try {
+    const respuesta = await iniciarSesion(correo, contrasena);
+    const usuarioBackend = respuesta.data;
+
+    const rolFrontend =
+      usuarioBackend.rol === 'Administrador'
+        ? 'Admin'
+        : usuarioBackend.rol;
+
+    const usuarioSesion = {
+      ...usuarioBackend,
+      rol: rolFrontend,
+
+      notificacionesEmail: true,
+      recordatorios: true,
+      perfilPublico: true,
+
+      carrerasRecomendadas:
+        usuarioBackend.carreraRecomendada
+          ? [usuarioBackend.carreraRecomendada]
+          : [],
+
+      universidadesFavoritas: [],
+      historialTests: []
+    };
+
+    setUser(usuarioSesion);
+
+    localStorage.setItem(
+      'vocatest_sesion',
+      JSON.stringify(usuarioSesion)
+    );
+
+    return {
+      ok: true,
+      rol: rolFrontend
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      mensaje: error.message
+    };
+  }
+};
 
   const register = (datosUsuario) => {
     const usuarios = JSON.parse(localStorage.getItem('vocatest_usuarios') || '[]');

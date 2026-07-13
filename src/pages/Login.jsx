@@ -14,50 +14,50 @@ export default function Login() {
   const [mostrarPassword, setMostrarPassword] = useState(false);
   const [intentos, setIntentos] = useState(0);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setError('');
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError('');
 
-    if (intentos >= 5) {
-      setError("Demasiados intentos. Vuelva más tarde.");
-      return;
+  if (intentos >= 5) {
+    setError('Demasiados intentos. Vuelva más tarde.');
+    return;
+  }
+
+  if (!correo || !contrasena) {
+    setError('Por favor completa todos los campos.');
+    return;
+  }
+
+  setCargando(true);
+
+  const resultado = await login(correo, contrasena);
+
+  setCargando(false);
+
+  if (resultado.ok) {
+    setIntentos(0);
+
+    if (resultado.rol === 'Admin') {
+      navigate('/admin');
+    } else {
+      navigate('/perfil');
     }
 
-    if (!correo || !contrasena) {
-      setError('Por favor completa todos los campos.');
-      return;
-    }
+    return;
+  }
 
-    setCargando(true);
+  const nuevosIntentos = intentos + 1;
+  setIntentos(nuevosIntentos);
 
-    setTimeout(() => {
-      const resultado = login(correo, contrasena);
-
-      setCargando(false);
-
-      if (resultado.ok) {
-        setIntentos(0);
-
-        if (resultado.rol === "Admin") {
-          navigate('/admin');
-        } else {
-          navigate('/perfil');
-        }
-      } else {
-        const nuevosIntentos = intentos + 1;
-
-        setIntentos(nuevosIntentos);
-
-        if (nuevosIntentos >= 5) {
-          setError("Demasiados intentos. Vuelva más tarde.");
-        } else {
-          setError(
-            `Correo o contraseña incorrectos.`
-          );
-        }
-      }
-    }, 800);
-  };
+  if (nuevosIntentos >= 5) {
+    setError('Demasiados intentos. Vuelva más tarde.');
+  } else {
+    setError(
+      resultado.mensaje ||
+      'Correo o contraseña incorrectos.'
+    );
+  }
+};
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
