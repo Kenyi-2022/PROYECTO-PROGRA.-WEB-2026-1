@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import universidadesData from '../data/universidades';
-import { iniciarSesion } from '../services/api';
+import { iniciarSesion, registrarUsuario } from '../services/api';
 
 const AppContext = createContext();
 
@@ -130,63 +130,102 @@ const login = async (correo, contrasena) => {
   }
 };
 
-  const register = (datosUsuario) => {
-    const usuarios = JSON.parse(localStorage.getItem('vocatest_usuarios') || '[]');
-    const correoNormalizado = datosUsuario.correo.trim().toLowerCase();
-    
-    if (usuarios.find(u => u.correo.toLowerCase() === correoNormalizado)) {
-      return { ok: false, mensaje: "Este correo ya está registrado." };
-    }
+const register = async (datosUsuario) => {
+  try {
+    const rol = datosUsuario.rol || 'Estudiante';
+    const esEstudiante = rol === 'Estudiante';
+
+    const respuesta = await registrarUsuario({
+      ...datosUsuario,
+      rol,
+      carreraRecomendada:
+        esEstudiante && carreraTemporal
+          ? carreraTemporal
+          : null
+    });
+
+    const usuarioBackend = respuesta.data;
+
+    const rolFrontend =
+      usuarioBackend.rol === 'Administrador'
+        ? 'Admin'
+        : usuarioBackend.rol;
 
     const ahora = new Date();
-    const fechaFormateada = ahora.toLocaleDateString('es-PE', { day: 'numeric', month: 'long', year: 'numeric' });
-    
-    // Extraemos el rol, si no hay, por defecto es Estudiante
-    const { confirmar, rol = "Estudiante", ...datosLimpios } = datosUsuario;
 
-    const esEstudiante = rol === "Estudiante";
+    const fechaFormateada = ahora.toLocaleDateString(
+      'es-PE',
+      {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      }
+    );
 
-    const nuevoUsuario = {
-      ...datosLimpios, 
-      id: Date.now(), 
-      rol: rol, 
-      correo: correoNormalizado,
-      ultimoIngreso: ahora.toLocaleDateString('es-PE'),
+    const usuarioSesion = {
+      ...usuarioBackend,
+      rol: rolFrontend,
       notificacionesEmail: true,
       recordatorios: true,
       perfilPublico: true,
 
-      // Si es estudiante le asignamos las variables del test
-      ...(esEstudiante ? {
-        carreraRecomendada: carreraTemporal || "",
-        carrerasRecomendadas: carreraTemporal ? [carreraTemporal] : [],
-        universidadesFavoritas: [],
-        historialTests: carreraTemporal ? [{ resultado: carreraTemporal, fecha: fechaFormateada }] : [],
-        fechaTest: carreraTemporal ? fechaFormateada : ""
-      } : {
-        // Si es profesor le asignamos variables de docente
-        especialidad: datosLimpios.especialidad || "Educación Secundaria",
-        estadoCuenta: "Activo",
-        estudiantesAsignados: 0,
-        testRevisados: 0,
-        recursosCompartidos: 0,
-        historialTests: []
-      })
+      ...(esEstudiante
+        ? {
+            carrerasRecomendadas:
+              usuarioBackend.carreraRecomendada
+                ? [usuarioBackend.carreraRecomendada]
+                : [],
+
+            universidadesFavoritas: [],
+
+            historialTests:
+              usuarioBackend.carreraRecomendada
+                ? [
+                    {
+                      resultado:
+                        usuarioBackend.carreraRecomendada,
+                      fecha: fechaFormateada
+                    }
+                  ]
+                : [],
+
+            fechaTest:
+              usuarioBackend.carreraRecomendada
+                ? fechaFormateada
+                : ''
+          }
+        : {
+            estadoCuenta: 'Activo',
+            estudiantesAsignados: 0,
+            testRevisados: 0,
+            recursosCompartidos: 0,
+            historialTests: []
+          })
     };
 
-    const actualizados = [...usuarios, nuevoUsuario];
-    localStorage.setItem('vocatest_usuarios', JSON.stringify(actualizados));
-    setUser(nuevoUsuario);
-    localStorage.setItem('vocatest_sesion', JSON.stringify(nuevoUsuario));
-    
-    // Solo borramos la carrera temporal si el que se registra es estudiante
+    setUser(usuarioSesion);
+
+    localStorage.setItem(
+      'vocatest_sesion',
+      JSON.stringify(usuarioSesion)
+    );
+
     if (esEstudiante) {
       localStorage.removeItem('carreraTemporal');
-      setCarreraTemporal("");
+      setCarreraTemporal('');
     }
-    
-    return { ok: true };
-  };
+
+    return {
+      ok: true,
+      rol: rolFrontend
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      mensaje: error.message
+    };
+  }
+};
 
   const logout = () => {
     setUser(null);
