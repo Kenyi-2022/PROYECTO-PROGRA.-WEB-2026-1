@@ -6,6 +6,7 @@ import {
   apiGetUniversidades,
   apiGetUsers,
   apiUpdateUser,
+  apiUpdateProfile,
   apiDeleteUser,
 } from "../services/api.js";
 
@@ -54,7 +55,11 @@ export function AppProvider({ children }) {
 
   const login = async (correo, contrasena) => {
     try {
-      const respuesta = await iniciarSesion(correo, contrasena);
+      const respuesta = await iniciarSesion(
+        correo.trim().toLowerCase(),
+        contrasena,
+      );
+
       const usuarioBackend = respuesta.data;
 
       const rolFrontend =
@@ -83,11 +88,12 @@ export function AppProvider({ children }) {
       return {
         ok: true,
         rol: rolFrontend,
+        usuario: usuarioSesion,
       };
     } catch (error) {
       return {
         ok: false,
-        mensaje: error.message,
+        mensaje: error.message || "No se pudo iniciar sesión.",
       };
     }
   };
@@ -217,6 +223,51 @@ export function AppProvider({ children }) {
       return {
         ok: false,
         mensaje: error.message || "No se pudo actualizar el usuario.",
+      };
+    }
+  };
+
+  const actualizarPerfil = async (datosPerfil) => {
+    if (!user) {
+      return {
+        ok: false,
+        mensaje: "No hay una sesión activa.",
+      };
+    }
+
+    try {
+      const usuarioActualizado = await apiUpdateProfile(user.id, datosPerfil);
+
+      const usuarioSesion = {
+        ...user,
+        ...usuarioActualizado,
+
+        rol: user.rol,
+      };
+
+      setUser(usuarioSesion);
+
+      localStorage.setItem("vocatest_sesion", JSON.stringify(usuarioSesion));
+
+      setUsuarios((usuariosActuales) =>
+        usuariosActuales.map((usuario) =>
+          usuario.id === user.id
+            ? {
+                ...usuario,
+                ...usuarioActualizado,
+              }
+            : usuario,
+        ),
+      );
+
+      return {
+        ok: true,
+        data: usuarioSesion,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        mensaje: error.message || "No se pudo actualizar el perfil.",
       };
     }
   };
@@ -397,61 +448,124 @@ export function AppProvider({ children }) {
     localStorage.setItem("vocatest_usuarios", JSON.stringify(actualizados));
   };
 
-  const cambiarNombre = (nombres, apellidos, passwordActual) => {
-    if (!user) return { ok: false, mensaje: "No hay sesión activa." };
-    if (user.contrasena !== passwordActual)
-      return { ok: false, mensaje: "La contrasena es incorrecta." };
-    editarUsuario(user.id, { nombres, apellidos });
-    return { ok: true };
-  };
+  const cambiarNombre = async (nombres, apellidos, passwordActual) => {
+    const nombresLimpios = String(nombres || "").trim();
+    const apellidosLimpios = String(apellidos || "").trim();
 
-  const cambiarCorreo = (nuevoCorreo, confirmarCorreo, passwordActual) => {
-    if (!user) return { ok: false, mensaje: "No hay sesión activa." };
-    const nuevoCorreoNormalizado = nuevoCorreo.trim().toLowerCase();
-    const confirmarCorreoNormalizado = confirmarCorreo.trim().toLowerCase();
-    if (nuevoCorreoNormalizado !== confirmarCorreoNormalizado)
-      return { ok: false, mensaje: "Los correos no coinciden." };
-    if (user.contrasena !== passwordActual)
-      return { ok: false, mensaje: "La contrasena es incorrecta." };
-
-    const usuarios = JSON.parse(
-      localStorage.getItem("vocatest_usuarios") || "[]",
-    );
-    if (
-      usuarios.find(
-        (u) =>
-          u.correo.toLowerCase() === nuevoCorreoNormalizado && u.id !== user.id,
-      )
-    ) {
-      return { ok: false, mensaje: "Ese correo ya está registrado." };
+    if (!nombresLimpios || !apellidosLimpios) {
+      return {
+        ok: false,
+        mensaje: "Debes ingresar nombres y apellidos.",
+      };
     }
 
-    editarUsuario(user.id, { correo: nuevoCorreoNormalizado });
-    return { ok: true };
+    if (!passwordActual.trim()) {
+      return {
+        ok: false,
+        mensaje: "Debes ingresar tu contraseña actual.",
+      };
+    }
+
+    return actualizarPerfil({
+      nombres: nombresLimpios,
+      apellidos: apellidosLimpios,
+      passwordActual,
+    });
   };
 
-  const cambiarPassword = (
+  const cambiarCorreo = async (
+    nuevoCorreo,
+    confirmarCorreo,
+    passwordActual,
+  ) => {
+    const nuevoCorreoNormalizado = String(nuevoCorreo || "")
+      .trim()
+      .toLowerCase();
+
+    const confirmarCorreoNormalizado = String(confirmarCorreo || "")
+      .trim()
+      .toLowerCase();
+
+    if (
+      !nuevoCorreoNormalizado ||
+      !confirmarCorreoNormalizado ||
+      !passwordActual.trim()
+    ) {
+      return {
+        ok: false,
+        mensaje: "Completa todos los campos.",
+      };
+    }
+
+    if (nuevoCorreoNormalizado !== confirmarCorreoNormalizado) {
+      return {
+        ok: false,
+        mensaje: "Los correos no coinciden.",
+      };
+    }
+
+    const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!regexCorreo.test(nuevoCorreoNormalizado)) {
+      return {
+        ok: false,
+        mensaje: "El formato del correo no es válido.",
+      };
+    }
+
+    if (nuevoCorreoNormalizado === user.correo.toLowerCase()) {
+      return {
+        ok: false,
+        mensaje: "El nuevo correo debe ser diferente al actual.",
+      };
+    }
+
+    return actualizarPerfil({
+      correo: nuevoCorreoNormalizado,
+      passwordActual,
+    });
+  };
+
+  const cambiarPassword = async (
     passwordActual,
     nuevaPassword,
     confirmarPassword,
   ) => {
-    if (!user) return { ok: false, mensaje: "No hay sesión activa." };
-    if (user.contrasena !== passwordActual)
-      return { ok: false, mensaje: "La contrasena actual es incorrecta." };
-    if (nuevaPassword !== confirmarPassword)
-      return { ok: false, mensaje: "Las contrasenas no coinciden." };
+    if (!passwordActual || !nuevaPassword || !confirmarPassword) {
+      return {
+        ok: false,
+        mensaje: "Completa todos los campos.",
+      };
+    }
+
+    if (nuevaPassword !== confirmarPassword) {
+      return {
+        ok: false,
+        mensaje: "Las contraseñas no coinciden.",
+      };
+    }
 
     const regexPassword = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+
     if (!regexPassword.test(nuevaPassword)) {
       return {
         ok: false,
         mensaje:
-          "La contrasena debe tener al menos 8 caracteres, una mayúscula y un número.",
+          "La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.",
       };
     }
 
-    editarUsuario(user.id, { contrasena: nuevaPassword });
-    return { ok: true };
+    if (passwordActual === nuevaPassword) {
+      return {
+        ok: false,
+        mensaje: "La nueva contraseña debe ser diferente a la actual.",
+      };
+    }
+
+    return actualizarPerfil({
+      passwordActual,
+      nuevaContrasena: nuevaPassword,
+    });
   };
 
   const agregarUniversidad = (nuevaUni) => {

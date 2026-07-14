@@ -12,7 +12,7 @@ const Cambiarpassword = () => {
 
     const [mensaje, setMensaje] = useState("");
 
-    const handleGuardar = () => {
+    const handleGuardar = async () => {
         setError("");
 
         if (!passwordActual || !nuevaPassword || !confirmarPassword) {
@@ -37,7 +37,7 @@ const Cambiarpassword = () => {
             return;
         }
 
-        const resultado = cambiarPassword(
+        const resultado = await cambiarPassword(
             passwordActual,
             nuevaPassword,
             confirmarPassword

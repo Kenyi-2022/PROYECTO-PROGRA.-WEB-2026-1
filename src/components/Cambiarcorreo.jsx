@@ -12,7 +12,7 @@ const Cambiarcorreo = () => {
 
     const [mensaje, setMensaje] = useState("");
 
-    const handleGuardar = () => {
+    const handleGuardar = async () => {
         setError("");
 
         if (!user) {
@@ -45,7 +45,7 @@ const Cambiarcorreo = () => {
             return;
         }
 
-        const resultado = cambiarCorreo(
+        const resultado = await cambiarCorreo(
             correoNormalizado,
             confirmarCorreoNormalizado,
             passwordActual
