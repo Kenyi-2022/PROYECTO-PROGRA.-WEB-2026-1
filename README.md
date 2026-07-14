@@ -1,16 +1,57 @@
-# React + Vite
+# VocaTest — Full Stack
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Monorepo del proyecto VocaTest. Incluye el frontend React/Vite y el backend
+Express/Prisma conectado a PostgreSQL.
 
-Currently, two official plugins are available:
+```text
+VocaTest/
+├── backend/       API REST, Prisma y pruebas
+├── public/        logos y mallas universitarias
+├── src/           frontend React
+└── package.json   comandos principales
+```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Ejecución local
 
-## React Compiler
+```powershell
+Copy-Item .env.example .env
+npm.cmd ci
+npm.cmd ci --prefix backend
+npm.cmd run dev
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+En otra terminal:
 
-## Expanding the ESLint configuration
+```powershell
+npm.cmd run start:backend
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+También se pueden iniciar ambos servidores desde VS Code con `Ctrl+Shift+B` y
+la tarea `VocaTest: Iniciar frontend y backend`.
+
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:3000`
+- Estado de PostgreSQL: `http://localhost:3000/api/health`
+
+Variables:
+
+```env
+VITE_API_URL=http://127.0.0.1:3000
+```
+
+## Verificación
+
+```powershell
+npm.cmd run lint
+npm.cmd run build
+npm.cmd run check:backend
+npm.cmd run test:backend
+```
+
+## Despliegue en Vercel
+
+- Framework preset: `Vite`.
+- Build command: `npm run build`.
+- Output directory: `dist`.
+- Variable `VITE_API_URL`: URL pública HTTPS del backend en Render.
+- `vercel.json` contiene el rewrite necesario para React Router.

@@ -5,7 +5,7 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 
 export default function SalaEstudiante() {
-  const { user } = useApp();
+  const { user, unirseSala } = useApp();
   const navigate = useNavigate();
   const [codigo, setCodigo] = useState("");
   const [error, setError] = useState("");
@@ -17,7 +17,7 @@ export default function SalaEstudiante() {
     setError("");
   };
 
-  const unirse = () => {
+  const unirse = async () => {
     if (codigo.length !== 8) {
       setError("El código debe tener 8 caracteres.");
       return;
@@ -28,20 +28,18 @@ export default function SalaEstudiante() {
       return;
     }
 
-    const salas = JSON.parse(localStorage.getItem("vocatest_salas") || "[]");
-    const sala = salas.find(s => s.codigo === codigo && s.activa);
+    setCargando(true);
 
-    if (!sala) {
-      setError("Código inválido o la sala ya fue cerrada por el administrador.");
+    const resultado = await unirseSala(codigo);
+
+    if (!resultado.ok) {
+      setCargando(false);
+      setError(resultado.mensaje);
       return;
     }
 
-    setCargando(true);
-    // Guardamos el código de sala en localStorage para que TestVocacional lo use
-    localStorage.setItem("vocatest_sala_actual", codigo);
-
     setTimeout(() => {
-      navigate('/test');
+      navigate("/test");
     }, 600);
   };
 
