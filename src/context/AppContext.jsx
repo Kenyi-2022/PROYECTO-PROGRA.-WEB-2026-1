@@ -4,9 +4,12 @@ import {
   iniciarSesion,
   registrarUsuario,
   apiGetUniversidades,
+  apiCreateUniversidad,
+  apiUpdateUniversidad,
+  apiDeleteUniversidad,
+  apiDeleteCarrera,
   apiGetUsers,
   apiUpdateUser,
-  apiUpdateProfile,
   apiDeleteUser,
 } from "../services/api.js";
 
@@ -568,42 +571,94 @@ export function AppProvider({ children }) {
     });
   };
 
-  const agregarUniversidad = (nuevaUni) => {
-    const uniConId = { ...nuevaUni, id: Date.now() };
-    const unisActualizadas = [...universidades, uniConId];
-    setUniversidades(unisActualizadas);
-    localStorage.setItem(
-      "vocatest_universidades",
-      JSON.stringify(unisActualizadas),
-    );
+  const agregarUniversidad = async (nuevaUni) => {
+    try {
+      const universidadCreada = await apiCreateUniversidad(nuevaUni);
+
+      setUniversidades((universidadesActuales) => [
+        ...universidadesActuales,
+        universidadCreada,
+      ]);
+
+      return {
+        ok: true,
+        data: universidadCreada,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        mensaje: error.message || "No se pudo registrar la universidad.",
+      };
+    }
   };
 
-  const eliminarUniversidad = (nombreUni) => {
-    const unisActualizadas = universidades.filter(
-      (u) => u.nombre !== nombreUni,
-    );
-    setUniversidades(unisActualizadas);
-    localStorage.setItem(
-      "vocatest_universidades",
-      JSON.stringify(unisActualizadas),
-    );
+  const editarUniversidad = async (id, datosUniversidad) => {
+    try {
+      const universidadActualizada = await apiUpdateUniversidad(
+        id,
+        datosUniversidad,
+      );
+
+      setUniversidades((universidadesActuales) =>
+        universidadesActuales.map((universidad) =>
+          universidad.id === id ? universidadActualizada : universidad,
+        ),
+      );
+
+      return {
+        ok: true,
+        data: universidadActualizada,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        mensaje: error.message || "No se pudo actualizar la universidad.",
+      };
+    }
   };
 
-  const eliminarCarrera = (nombreUni, nombreCarrera) => {
-    const unisActualizadas = universidades.map((uni) => {
-      if (uni.nombre === nombreUni) {
-        return {
-          ...uni,
-          carreras: uni.carreras.filter((c) => c.nombre !== nombreCarrera),
-        };
-      }
-      return uni;
-    });
-    setUniversidades(unisActualizadas);
-    localStorage.setItem(
-      "vocatest_universidades",
-      JSON.stringify(unisActualizadas),
-    );
+  const eliminarUniversidad = async (id) => {
+    try {
+      await apiDeleteUniversidad(id);
+
+      setUniversidades((universidadesActuales) =>
+        universidadesActuales.filter((universidad) => universidad.id !== id),
+      );
+
+      return {
+        ok: true,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        mensaje: error.message || "No se pudo eliminar la universidad.",
+      };
+    }
+  };
+
+  const eliminarCarrera = async (idCarrera) => {
+    try {
+      await apiDeleteCarrera(idCarrera);
+
+      setUniversidades((universidadesActuales) =>
+        universidadesActuales.map((universidad) => ({
+          ...universidad,
+
+          carreras: universidad.carreras.filter(
+            (carrera) => carrera.id !== idCarrera,
+          ),
+        })),
+      );
+
+      return {
+        ok: true,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        mensaje: error.message || "No se pudo eliminar la carrera.",
+      };
+    }
   };
 
   const buscarCarreraGlobal = (nombreCarrera) => {
@@ -645,6 +700,7 @@ export function AppProvider({ children }) {
 
         universidades,
         agregarUniversidad,
+        editarUniversidad,
         eliminarUniversidad,
         eliminarCarrera,
 

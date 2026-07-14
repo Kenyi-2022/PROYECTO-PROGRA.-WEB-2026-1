@@ -109,16 +109,13 @@ export async function apiUpdateUser(id, datosUsuario) {
 }
 
 export async function apiUpdateProfile(id, datosPerfil) {
-  const respuesta = await fetch(
-    `${API_URL}/api/db/users/${id}/profile`,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(datosPerfil),
+  const respuesta = await fetch(`${API_URL}/api/db/users/${id}/profile`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    body: JSON.stringify(datosPerfil),
+  });
 
   const datos = await procesarRespuesta(
     respuesta,
@@ -140,6 +137,28 @@ export async function apiDeleteUser(id) {
    UNIVERSIDADES
 ====================================================== */
 
+function normalizarUniversidad(universidad) {
+  const logos = universidad.logos || universidad.Logo || [];
+
+  const carreras = universidad.carreras || universidad.Carrera || [];
+
+  const escalas = universidad.escalas || universidad.Escala || [];
+
+  return {
+    id: universidad.id,
+    nombre: universidad.nombre,
+    tipo: universidad.tipo,
+    ubicacion: universidad.ubicacion,
+    costoMatricula: universidad.costoMatricula,
+    webOficial: universidad.webOficial,
+
+    logo: universidad.logo || logos[0]?.url || "",
+
+    carreras,
+    escalas,
+  };
+}
+
 export async function apiGetUniversidades() {
   const respuesta = await fetch(`${API_URL}/api/db/universidades`);
 
@@ -148,27 +167,61 @@ export async function apiGetUniversidades() {
     "Error al obtener universidades.",
   );
 
-  return datos.data.map((universidad) => {
-    const logos = universidad.logos || universidad.Logo || [];
+  return datos.data.map(normalizarUniversidad);
+}
 
-    const carreras = universidad.carreras || universidad.Carrera || [];
+export async function apiCreateUniversidad(datosUniversidad) {
+  const respuesta = await fetch(`${API_URL}/api/db/universidades`, {
+    method: "POST",
 
-    const escalas = universidad.escalas || universidad.Escala || [];
+    headers: {
+      "Content-Type": "application/json",
+    },
 
-    return {
-      id: universidad.id,
-      nombre: universidad.nombre,
-      tipo: universidad.tipo,
-      ubicacion: universidad.ubicacion,
-      costoMatricula: universidad.costoMatricula,
-      webOficial: universidad.webOficial,
-
-      logo: logos[0]?.url || "",
-
-      carreras,
-      escalas,
-    };
+    body: JSON.stringify(datosUniversidad),
   });
+
+  const datos = await procesarRespuesta(
+    respuesta,
+    "No se pudo registrar la universidad.",
+  );
+
+  return normalizarUniversidad(datos.data);
+}
+
+export async function apiUpdateUniversidad(id, datosUniversidad) {
+  const respuesta = await fetch(`${API_URL}/api/db/universidades/${id}`, {
+    method: "PUT",
+
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    body: JSON.stringify(datosUniversidad),
+  });
+
+  const datos = await procesarRespuesta(
+    respuesta,
+    "No se pudo actualizar la universidad.",
+  );
+
+  return normalizarUniversidad(datos.data);
+}
+
+export async function apiDeleteUniversidad(id) {
+  const respuesta = await fetch(`${API_URL}/api/db/universidades/${id}`, {
+    method: "DELETE",
+  });
+
+  return procesarRespuesta(respuesta, "No se pudo eliminar la universidad.");
+}
+
+export async function apiDeleteCarrera(id) {
+  const respuesta = await fetch(`${API_URL}/api/db/carreras/${id}`, {
+    method: "DELETE",
+  });
+
+  return procesarRespuesta(respuesta, "No se pudo eliminar la carrera.");
 }
 
 export const apiLogin = iniciarSesion;
