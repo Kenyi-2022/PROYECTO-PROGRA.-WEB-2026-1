@@ -21,9 +21,10 @@ function Directorio() {
     if (!texto) return true;
     const coincideNombre = uni.nombre.toLowerCase().includes(texto);
     const coincideTipo = uni.tipo.toLowerCase().includes(texto);
-    const coincideCarrera = uni.carreras.some((c) =>
-      c.nombre.toLowerCase().includes(texto) ||
-      c.facultad.toLowerCase().includes(texto)
+    const coincideCarrera = uni.carreras.some(
+      (c) =>
+        c.nombre.toLowerCase().includes(texto) ||
+        c.facultad.toLowerCase().includes(texto),
     );
     return coincideNombre || coincideTipo || coincideCarrera;
   });
@@ -48,13 +49,23 @@ function Directorio() {
               placeholder="Buscar por carrera, universidad o facultad..."
               className="w-full px-5 py-3.5 pr-12 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-100 shadow-sm text-gray-800 font-medium bg-white"
             />
-            <svg className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            <svg
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2.5"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
             </svg>
           </div>
 
           <div className="flex gap-2">
-            {["Todas", "Privada", "Pública"].map(t => (
+            {["Todas", "Privada", "Pública"].map((t) => (
               <button
                 key={t}
                 onClick={() => setFiltroTipo(t)}
@@ -68,19 +79,26 @@ function Directorio() {
 
         {/* ✅ Estado de carga mientras llega la respuesta del backend */}
         {cargandoUniversidades ? (
-          <p className="text-center text-gray-400 py-20">Cargando universidades...</p>
+          <p className="text-center text-gray-400 py-20">
+            Cargando universidades...
+          </p>
         ) : universidadesFiltradas.length > 0 ? (
           <>
             <p className="text-center text-sm text-gray-400 mb-6">
-              {universidadesFiltradas.length} universidad{universidadesFiltradas.length !== 1 ? "es" : ""}
+              {universidadesFiltradas.length} universidad
+              {universidadesFiltradas.length !== 1 ? "es" : ""}
               {filtroTipo !== "Todas" ? ` ${filtroTipo.toLowerCase()}` : ""}
-              {busqueda ? ` para "${busqueda}"` : " encontrada" + (universidadesFiltradas.length !== 1 ? "s" : "")}
+              {busqueda
+                ? ` para "${busqueda}"`
+                : " encontrada" +
+                  (universidadesFiltradas.length !== 1 ? "s" : "")}
             </p>
 
             <div className="space-y-5">
               {universidadesFiltradas.map((uni) => (
                 <CardUniversidad
                   key={uni.id}
+                  id={uni.id}
                   logo={uni.logo}
                   nombre={uni.nombre}
                   tipo={uni.tipo}
@@ -97,12 +115,17 @@ function Directorio() {
         ) : (
           <div className="text-center py-20 text-gray-500">
             <p className="text-5xl mb-4">🔍</p>
-            <p className="text-xl font-semibold">No se encontraron resultados</p>
+            <p className="text-xl font-semibold">
+              No se encontraron resultados
+            </p>
             <p className="text-sm mt-2">
               Intenta con otro término como "Medicina", "Privada" o "PUCP"
             </p>
             <button
-              onClick={() => { setBusqueda(""); setFiltroTipo("Todas"); }}
+              onClick={() => {
+                setBusqueda("");
+                setFiltroTipo("Todas");
+              }}
               className="mt-6 bg-blue-600 text-white px-6 py-2.5 rounded-xl hover:bg-blue-700 transition font-semibold"
             >
               Ver todas las universidades

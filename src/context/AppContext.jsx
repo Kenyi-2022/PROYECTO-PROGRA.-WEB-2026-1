@@ -11,6 +11,11 @@ import {
   apiGetUsers,
   apiUpdateUser,
   apiDeleteUser,
+  apiGetFavoritos,
+  apiAddFavorito,
+  apiDeleteFavorito,
+  apiGetHistorial,
+  apiCreateHistorial,
 } from "../services/api.js";
 
 const AppContext = createContext();
@@ -55,6 +60,123 @@ export function AppProvider({ children }) {
       setSalas(JSON.parse(salasGuardadas));
     }
   }, []);
+
+  useEffect(() => {
+    if (!user?.id || user.rol !== "Estudiante") {
+      return;
+    }
+
+    let componenteActivo = true;
+
+    const cargarFavoritosUsuario = async () => {
+      try {
+        const favoritos = await apiGetFavoritos(user.id);
+
+        if (!componenteActivo) {
+          return;
+        }
+
+        const nombresFavoritos = favoritos.map(
+          (universidad) => universidad.nombre,
+        );
+
+        setUser((usuarioActual) => {
+          if (!usuarioActual || usuarioActual.id !== user.id) {
+            return usuarioActual;
+          }
+
+          const usuarioActualizado = {
+            ...usuarioActual,
+            universidadesFavoritas: nombresFavoritos,
+          };
+
+          localStorage.setItem(
+            "vocatest_sesion",
+            JSON.stringify(usuarioActualizado),
+          );
+
+          return usuarioActualizado;
+        });
+      } catch (error) {
+        console.error("No se pudieron cargar los favoritos:", error);
+      }
+    };
+
+    cargarFavoritosUsuario();
+
+    return () => {
+      componenteActivo = false;
+    };
+  }, [user?.id, user?.rol]);
+
+  useEffect(() => {
+    if (!user?.id || user.rol !== "Estudiante") {
+      return;
+    }
+
+    let componenteActivo = true;
+
+    const cargarHistorialUsuario = async () => {
+      try {
+        const historial = await apiGetHistorial(user.id);
+
+        if (!componenteActivo) {
+          return;
+        }
+
+        setUser((usuarioActual) => {
+          if (!usuarioActual || usuarioActual.id !== user.id) {
+            return usuarioActual;
+          }
+
+          const ultimoResultado = historial[0] || null;
+
+          /*
+           * La lista de recomendaciones no repite
+           * carreras iguales y conserva las 5 recientes.
+           */
+          const carrerasRecomendadas = [
+            ...new Set(historial.map((entrada) => entrada.resultado)),
+          ].slice(0, 5);
+
+          const usuarioActualizado = {
+            ...usuarioActual,
+
+            historialTests: historial,
+
+            carreraRecomendada:
+              ultimoResultado?.resultado ||
+              usuarioActual.carreraRecomendada ||
+              null,
+
+            carreraRecommended:
+              ultimoResultado?.resultado ||
+              usuarioActual.carreraRecomendada ||
+              null,
+
+            carrerasRecomendadas,
+
+            fechaTest: ultimoResultado?.fecha || usuarioActual.fechaTest || "",
+          };
+
+          localStorage.setItem(
+            "vocatest_sesion",
+            JSON.stringify(usuarioActualizado),
+          );
+
+          return usuarioActualizado;
+        });
+      } catch (error) {
+        console.error("No se pudo cargar el historial:", error);
+      }
+    };
+
+    cargarHistorialUsuario();
+
+    return () => {
+      componenteActivo = false;
+    };
+  }, [user?.id, user?.rol]);
 
   const login = async (correo, contrasena) => {
     try {
@@ -299,101 +421,186 @@ export function AppProvider({ children }) {
     localStorage.removeItem("vocatest_sesion");
   };
 
-  const guardarResultadoTest = (resultadoFinal) => {
-    if (typeof setCarreraTemporal === "function") {
-      setCarreraTemporal(resultadoFinal);
+  const guardarResultadoTest = async (resultadoFinal) => {
+    const resultadoLimpio = String(resultadoFinal || "").trim();
+
+    if (!resultadoLimpio) {
+      return {
+        ok: false,
+        mensaje: "El resultado del test no es válido.",
+      };
     }
-    localStorage.setItem("carreraTemporal", resultadoFinal);
 
-    if (!user) return;
+    /*
+     * Esto se conserva porque ResultadoTest.jsx
+     * usa carreraTemporal para mostrar el resultado.
+     */
+    setCarreraTemporal(resultadoLimpio);
 
-    const ahora = new Date();
-    const fechaFormateada = ahora.toLocaleDateString("es-PE", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-    const entrada = { resultado: resultadoFinal, fecha: fechaFormateada };
+    localStorage.setItem("carreraTemporal", resultadoLimpio);
 
-    const usuarioActualizado = {
-      ...user,
-      carreraRecommended: resultadoFinal,
-      carreraRecomendada: resultadoFinal,
-      carrerasRecomendadas: [
-        resultadoFinal,
-        ...(user.carrerasRecomendadas || []),
-      ].slice(0, 5),
-      historialTests: [entrada, ...(user.historialTests || [])].slice(0, 20),
-      fechaTest: fechaFormateada,
-    };
+    if (!user) {
+      return {
+        ok: true,
+        temporal: true,
+      };
+    }
 
-    setUser(usuarioActualizado);
-    localStorage.setItem("vocatest_sesion", JSON.stringify(usuarioActualizado));
-
-    const usuarios = JSON.parse(
-      localStorage.getItem("vocatest_usuarios") || "[]",
-    );
-    const actualizados = usuarios.map((u) =>
-      u.id === usuarioActualizado.id ? usuarioActualizado : u,
-    );
-    localStorage.setItem("vocatest_usuarios", JSON.stringify(actualizados));
-
-    const codigoSala = localStorage.getItem("vocatest_sala_actual");
-    if (codigoSala) {
-      const salasAlmacenadas = JSON.parse(
-        localStorage.getItem("vocatest_salas") || "[]",
+    try {
+      /*
+       * PostgreSQL crea la entrada y devuelve
+       * su ID, resultado y fecha.
+       */
+      const entradaGuardada = await apiCreateHistorial(
+        user.id,
+        resultadoLimpio,
       );
-      const salasActualizadas = salasAlmacenadas.map((sala) => {
-        if (sala.codigo === codigoSala && sala.activa) {
-          const nuevoResultado = {
-            nombre: `${user.nombres} ${user.apellidos}`,
-            correo: user.correo,
-            resultado: resultadoFinal,
-            fecha: ahora.toLocaleTimeString("es-PE", {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-          };
-          const resultadosPrevios = (sala.resultados || []).filter(
-            (r) => r.correo !== user.correo,
-          );
-          return {
-            ...sala,
-            resultados: [...resultadosPrevios, nuevoResultado],
-          };
-        }
-        return sala;
-      });
 
-      localStorage.setItem("vocatest_salas", JSON.stringify(salasActualizadas));
-      if (typeof setSalas === "function") setSalas(salasActualizadas);
+      const historialActualizado = [
+        entradaGuardada,
+        ...(user.historialTests || []).filter(
+          (entrada) => entrada.id !== entradaGuardada.id,
+        ),
+      ].slice(0, 20);
+
+      const carrerasRecomendadas = [
+        ...new Set(historialActualizado.map((entrada) => entrada.resultado)),
+      ].slice(0, 5);
+
+      const usuarioActualizado = {
+        ...user,
+
+        carreraRecommended: resultadoLimpio,
+        carreraRecomendada: resultadoLimpio,
+
+        carrerasRecomendadas,
+
+        historialTests: historialActualizado,
+
+        fechaTest: entradaGuardada.fecha,
+      };
+
+      setUser(usuarioActualizado);
+
+      localStorage.setItem(
+        "vocatest_sesion",
+        JSON.stringify(usuarioActualizado),
+      );
+
+      /*
+       * Conservamos tu lógica actual de salas.
+       * Las salas todavía trabajan con localStorage.
+       */
+      const codigoSala = localStorage.getItem("vocatest_sala_actual");
+
+      if (codigoSala) {
+        const salasAlmacenadas = JSON.parse(
+          localStorage.getItem("vocatest_salas") || "[]",
+        );
+
+        const ahora = new Date();
+
+        const salasActualizadas = salasAlmacenadas.map((sala) => {
+          if (sala.codigo === codigoSala && sala.activa) {
+            const nuevoResultado = {
+              nombre: `${user.nombres} ${user.apellidos}`,
+
+              correo: user.correo,
+
+              resultado: resultadoLimpio,
+
+              fecha: ahora.toLocaleTimeString("es-PE", {
+                hour: "2-digit",
+                minute: "2-digit",
+              }),
+            };
+
+            const resultadosPrevios = (sala.resultados || []).filter(
+              (resultado) => resultado.correo !== user.correo,
+            );
+
+            return {
+              ...sala,
+
+              resultados: [...resultadosPrevios, nuevoResultado],
+            };
+          }
+
+          return sala;
+        });
+
+        localStorage.setItem(
+          "vocatest_salas",
+          JSON.stringify(salasActualizadas),
+        );
+
+        setSalas(salasActualizadas);
+      }
+
+      return {
+        ok: true,
+        data: entradaGuardada,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        mensaje: error.message || "No se pudo guardar el resultado.",
+      };
     }
   };
 
-  const marcarFavoritoContext = (nombreUniversidad) => {
-    if (!user) return;
-    const usuarioActualizado = { ...user };
-    if (!usuarioActualizado.universidadesFavoritas)
-      usuarioActualizado.universidadesFavoritas = [];
-
-    if (usuarioActualizado.universidadesFavoritas.includes(nombreUniversidad)) {
-      usuarioActualizado.universidadesFavoritas =
-        usuarioActualizado.universidadesFavoritas.filter(
-          (uni) => uni !== nombreUniversidad,
-        );
-    } else {
-      usuarioActualizado.universidadesFavoritas.push(nombreUniversidad);
+  const marcarFavoritoContext = async (universidadId, nombreUniversidad) => {
+    if (!user) {
+      return {
+        ok: false,
+        mensaje: "Debes iniciar sesión para guardar favoritos.",
+      };
     }
 
-    setUser(usuarioActualizado);
-    localStorage.setItem("vocatest_sesion", JSON.stringify(usuarioActualizado));
-    const usuariosGlobales = JSON.parse(
-      localStorage.getItem("vocatest_usuarios") || "[]",
-    );
-    const actualizados = usuariosGlobales.map((u) =>
-      u.id === usuarioActualizado.id ? usuarioActualizado : u,
-    );
-    localStorage.setItem("vocatest_usuarios", JSON.stringify(actualizados));
+    if (user.rol !== "Estudiante") {
+      return {
+        ok: false,
+        mensaje: "Solo los estudiantes pueden guardar favoritos.",
+      };
+    }
+
+    try {
+      const favoritosActuales = user.universidadesFavoritas || [];
+
+      const yaEsFavorito = favoritosActuales.includes(nombreUniversidad);
+
+      if (yaEsFavorito) {
+        await apiDeleteFavorito(user.id, universidadId);
+      } else {
+        await apiAddFavorito(user.id, universidadId);
+      }
+
+      const nuevosFavoritos = yaEsFavorito
+        ? favoritosActuales.filter((nombre) => nombre !== nombreUniversidad)
+        : [...favoritosActuales, nombreUniversidad];
+
+      const usuarioActualizado = {
+        ...user,
+        universidadesFavoritas: nuevosFavoritos,
+      };
+
+      setUser(usuarioActualizado);
+
+      localStorage.setItem(
+        "vocatest_sesion",
+        JSON.stringify(usuarioActualizado),
+      );
+
+      return {
+        ok: true,
+        esFavorito: !yaEsFavorito,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        mensaje: error.message || "No se pudo actualizar el favorito.",
+      };
+    }
   };
 
   const crearSala = (nombreSala, codigoPersonalizado, pin) => {

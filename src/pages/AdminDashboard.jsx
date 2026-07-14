@@ -740,6 +740,7 @@ export default function AdminDashboard() {
                   }
                 >
                   <CardUniversidad
+                    id={uni.id}
                     logo={uni.logo}
                     nombre={uni.nombre}
                     tipo={uni.tipo}

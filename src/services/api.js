@@ -224,5 +224,107 @@ export async function apiDeleteCarrera(id) {
   return procesarRespuesta(respuesta, "No se pudo eliminar la carrera.");
 }
 
+/* ======================================================
+   FAVORITOS
+====================================================== */
+
+export async function apiGetFavoritos(userId) {
+  const respuesta = await fetch(`${API_URL}/api/db/users/${userId}/favoritos`);
+
+  const datos = await procesarRespuesta(
+    respuesta,
+    "No se pudieron obtener los favoritos.",
+  );
+
+  return datos.data;
+}
+
+export async function apiAddFavorito(userId, universidadId) {
+  const respuesta = await fetch(
+    `${API_URL}/api/db/users/${userId}/favoritos/${universidadId}`,
+    {
+      method: "POST",
+    },
+  );
+
+  const datos = await procesarRespuesta(
+    respuesta,
+    "No se pudo agregar la universidad a favoritos.",
+  );
+
+  return datos.data;
+}
+
+export async function apiDeleteFavorito(userId, universidadId) {
+  const respuesta = await fetch(
+    `${API_URL}/api/db/users/${userId}/favoritos/${universidadId}`,
+    {
+      method: "DELETE",
+    },
+  );
+
+  return procesarRespuesta(
+    respuesta,
+    "No se pudo eliminar la universidad de favoritos.",
+  );
+}
+
+/* ======================================================
+   HISTORIAL DE TESTS
+====================================================== */
+
+function normalizarHistorialTest(test) {
+  const fechaObjeto = new Date(test.fecha);
+
+  const fechaFormateada = Number.isNaN(fechaObjeto.getTime())
+    ? ""
+    : fechaObjeto.toLocaleDateString("es-PE", {
+        timeZone: "America/Lima",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+
+  return {
+    id: test.id,
+    userId: test.userId,
+    resultado: test.resultado,
+    fecha: fechaFormateada,
+    fechaISO: test.fecha,
+  };
+}
+
+export async function apiGetHistorial(userId) {
+  const respuesta = await fetch(`${API_URL}/api/db/users/${userId}/historial`);
+
+  const datos = await procesarRespuesta(
+    respuesta,
+    "No se pudo obtener el historial de tests.",
+  );
+
+  return datos.data.map(normalizarHistorialTest);
+}
+
+export async function apiCreateHistorial(userId, resultado) {
+  const respuesta = await fetch(`${API_URL}/api/db/users/${userId}/historial`, {
+    method: "POST",
+
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    body: JSON.stringify({
+      resultado,
+    }),
+  });
+
+  const datos = await procesarRespuesta(
+    respuesta,
+    "No se pudo guardar el resultado del test.",
+  );
+
+  return normalizarHistorialTest(datos.data);
+}
+
 export const apiLogin = iniciarSesion;
 export const apiRegister = registrarUsuario;

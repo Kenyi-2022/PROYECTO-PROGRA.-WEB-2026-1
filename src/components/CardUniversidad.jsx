@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+
 function CardUniversidad({
+  id,
   logo,
   nombre,
   tipo,
@@ -59,16 +61,17 @@ function CardUniversidad({
     }
   };
 
-  const handleToggleFavorito = () => {
+  const handleToggleFavorito = async () => {
     if (!user) {
-      alert("Debes iniciar sesión para guardar favoritos");
+      alert("Debes iniciar sesión para guardar favoritos.");
       return;
     }
-    marcarFavoritoContext(nombre);
-  };
 
-  const irAFavoritos = () => {
-    navigate("/perfil?tab=favoritos");
+    const resultado = await marcarFavoritoContext(id, nombre);
+
+    if (!resultado.ok) {
+      alert(resultado.mensaje);
+    }
   };
 
   return (
