@@ -54,14 +54,14 @@ export default function Home() {
             />
           ))}
 
-          <div className="absolute inset-0 bg-gradient-to-tr from-indigo-950 via-blue-900/70 to-teal-900/60 pointer-events-none" />
+          <div className="absolute inset-0 bg-linear-to-tr from-indigo-950 via-blue-900/70 to-teal-900/60 pointer-events-none" />
 
           <div className="relative max-w-4xl mx-auto space-y-6">
             <span className="inline-block bg-white/20 backdrop-blur-md text-teal-100 hover:bg-white/30 transition-colors duration-300 px-4 py-1.5 rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-sm">
               🚀 Prepárate para el siguiente nivel
             </span>
 
-            <h1 className="text-4xl md:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-teal-100 drop-shadow-sm">
+            <h1 className="text-4xl md:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-linear-to-r from-white via-slate-100 to-teal-100 drop-shadow-sm">
               Diseña tu futuro académico con certeza
             </h1>
 
@@ -72,7 +72,7 @@ export default function Home() {
             <div className="pt-4">
               <button
                 onClick={handleStartTest}
-                className="group relative inline-flex items-center justify-center p-0.5 overflow-hidden text-base font-bold text-white rounded-xl bg-gradient-to-br from-teal-300 to-lime-300 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer shadow-xl shadow-teal-950/40"
+                className="group relative inline-flex items-center justify-center p-0.5 overflow-hidden text-base font-bold text-white rounded-xl bg-linear-to-br from-teal-300 to-lime-300 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer shadow-xl shadow-teal-950/40"
               >
                 <span className="relative px-8 py-4 transition-all ease-in duration-75 bg-slate-900 rounded-xl group-hover:bg-opacity-0">
                   🚀 Iniciar Test Vocacional
@@ -83,7 +83,7 @@ export default function Home() {
         </header>
 
         {/* ===================== BARRA DE BÚSQUEDA ===================== */}
-        <section className="bg-gradient-to-r from-teal-500 to-emerald-500 text-white py-8 px-6 shadow-md">
+        <section className="bg-linear-to-r from-teal-500 to-emerald-500 text-white py-8 px-6 shadow-md">
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="space-y-1 text-center md:text-left">
               <h3 className="text-xl md:text-2xl font-extrabold tracking-tight">
@@ -165,7 +165,7 @@ export default function Home() {
         {/* ===================== MISIÓN Y VISIÓN ===================== */}
         <section className="bg-white py-16 px-6">
           <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8">
-            <div className="bg-gradient-to-br from-slate-50 to-teal-50/20 p-8 rounded-2xl border border-slate-200 flex flex-col md:flex-row gap-5 items-start">
+            <div className="bg-linear-to-br from-slate-50 to-teal-50/20 p-8 rounded-2xl border border-slate-200 flex flex-col md:flex-row gap-5 items-start">
               <div className="text-4xl bg-teal-100 p-4 rounded-xl text-teal-600 shrink-0">🎯</div>
               <div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2">Nuestra Misión</h3>
@@ -177,7 +177,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-slate-50 to-purple-50/20 p-8 rounded-2xl border border-slate-200 flex flex-col md:flex-row gap-5 items-start">
+            <div className="bg-linear-to-br from-slate-50 to-purple-50/20 p-8 rounded-2xl border border-slate-200 flex flex-col md:flex-row gap-5 items-start">
               <div className="text-4xl bg-purple-100 p-4 rounded-xl text-purple-600 shrink-0">👁️‍🗨️</div>
               <div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2">Nuestra Visión</h3>
@@ -199,7 +199,7 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-8">
             <div className="group bg-white p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-teal-200 transition-all duration-300 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-teal-500/5 rounded-bl-full transition-all group-hover:scale-150 duration-300" />
-              <div className="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-emerald-500 mb-4">01</div>
+              <div className="text-4xl font-black bg-clip-text text-transparent bg-linear-to-r from-teal-500 to-emerald-500 mb-4">01</div>
               <h4 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-teal-600 transition-colors">Autoconocimiento Real</h4>
               <p className="text-slate-600 text-base leading-relaxed">
                 Descubre tus fortalezas cognitivas y áreas de interés mediante un test estructurado.
@@ -208,7 +208,7 @@ export default function Home() {
 
             <div className="group bg-white p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-blue-200 transition-all duration-300 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/5 rounded-bl-full transition-all group-hover:scale-150 duration-300" />
-              <div className="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-500 mb-4">02</div>
+              <div className="text-4xl font-black bg-clip-text text-transparent bg-linear-to-r from-blue-500 to-indigo-500 mb-4">02</div>
               <h4 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">Directorio Centralizado</h4>
               <p className="text-slate-600 text-base leading-relaxed">
                 Explora un catálogo completo de universidades públicas y privadas de todo el Perú en un solo lugar.
@@ -217,7 +217,7 @@ export default function Home() {
 
             <div className="group bg-white p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all duration-300 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/5 rounded-bl-full transition-all group-hover:scale-150 duration-300" />
-              <div className="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-pink-500 mb-4">03</div>
+              <div className="text-4xl font-black bg-clip-text text-transparent bg-linear-to-r from-purple-500 to-pink-500 mb-4">03</div>
               <h4 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-purple-600 transition-colors">Transparencia Financiera</h4>
               <p className="text-slate-600 text-base leading-relaxed">
                 Evalúa con claridad las escalas de pago, pensiones, matrículas o costos administrativos
@@ -229,7 +229,7 @@ export default function Home() {
           <div className="text-center mt-16">
             <button
               onClick={handleStartTest}
-              className="animate-bounce hover:animate-none inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold px-8 py-4 rounded-xl shadow-lg shadow-indigo-600/20 hover:shadow-xl transition-all duration-200 transform hover:scale-105 cursor-pointer"
+              className="animate-bounce hover:animate-none inline-flex items-center gap-2 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold px-8 py-4 rounded-xl shadow-lg shadow-indigo-600/20 hover:shadow-xl transition-all duration-200 transform hover:scale-105 cursor-pointer"
             >
               <span>¡Descubrir mi carrera ahora!</span>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

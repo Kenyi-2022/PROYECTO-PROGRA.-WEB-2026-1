@@ -56,11 +56,11 @@ export default function Perfil() {
     <div className="min-h-screen bg-slate-100 flex flex-col">
       <Navbar />
 
-      <main className="flex-grow max-w-6xl mx-auto w-full px-4 py-8 space-y-6">
+      <main className="grow max-w-6xl mx-auto w-full px-4 py-8 space-y-6">
 
         {/* ── Header del perfil ─────────────────────────── */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex flex-col sm:flex-row items-center sm:items-start gap-5">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-3xl font-black shadow-md shrink-0">
+          <div className="w-20 h-20 rounded-2xl bg-linear-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-3xl font-black shadow-md shrink-0">
             {user.nombres?.[0]}{user.apellidos?.[0]}
           </div>
           <div className="flex-1 text-center sm:text-left">
@@ -186,7 +186,7 @@ export default function Perfil() {
                     Última vez realizado: <strong className="text-blue-600">{user.fechaTest || 'Reciente'}</strong>
                   </p>
 
-                  <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl p-6 text-center mb-6">
+                  <div className="bg-linear-to-r from-blue-600 to-indigo-600 text-white rounded-2xl p-6 text-center mb-6">
                     <p className="text-sm font-medium opacity-80 mb-1">Tu carrera recomendada principal</p>
                     <p className="text-2xl font-black">{user.carreraRecomendada}</p>
                   </div>

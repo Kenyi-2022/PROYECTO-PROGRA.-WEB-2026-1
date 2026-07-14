@@ -26,13 +26,13 @@ export default function AdminDashboard() {
   const [modalUsuario, setModalUsuario] = useState({ visible: false, id: null, nombre: '' });
   const [modalUni, setModalUni] = useState({ visible: false, nombre: '' });
   const [modalCarrera, setModalCarrera] = useState({ visible: false, uni: '', carrera: '' });
+const { usuarios } = useApp(); // agrégalo al destructuring de arriba también
 
-  useEffect(() => {
-    if (user && user.rol === 'Admin') {
-      const usersDB = JSON.parse(localStorage.getItem('vocatest_usuarios') || '[]');
-      setListaUsuarios(usersDB);
-    }
-  }, [user]);
+useEffect(() => {
+  if (user && user.rol === 'Admin') {
+    setListaUsuarios(usuarios);
+  }
+}, [user, usuarios]);
 
   if (!user || (user.rol !== 'Admin' && user.rol !== 'Profesor')) {
     return <div className="p-10 text-center text-red-500 font-bold">Acceso denegado. Área exclusiva para Docentes y Administradores.</div>;
@@ -85,16 +85,17 @@ export default function AdminDashboard() {
     setEditandoId(u.id);
     setDatosEdicion({ nombres: u.nombres, apellidos: u.apellidos, rol: u.rol, correo: u.correo });
   };
-  const guardarEdicion = (id) => {
-    editarUsuario(id, datosEdicion);
-    setListaUsuarios(listaUsuarios.map(u => u.id === id ? { ...u, ...datosEdicion } : u));
-    setEditandoId(null);
-  };
-  const confirmarBorrarUsuario = () => {
-    eliminarUsuario(modalUsuario.id);
-    setListaUsuarios(listaUsuarios.filter(u => u.id !== modalUsuario.id));
-    setModalUsuario({ visible: false, id: null, nombre: '' });
-  };
+const guardarEdicion = async (id) => {
+  await editarUsuario(id, datosEdicion);
+  setListaUsuarios(listaUsuarios.map(u => u.id === id ? { ...u, ...datosEdicion } : u));
+  setEditandoId(null);
+};
+
+const confirmarBorrarUsuario = async () => {
+  await eliminarUsuario(modalUsuario.id);
+  setListaUsuarios(listaUsuarios.filter(u => u.id !== modalUsuario.id));
+  setModalUsuario({ visible: false, id: null, nombre: '' });
+};
 
   const confirmarBorrarUni = () => {
     eliminarUniversidad(modalUni.nombre);

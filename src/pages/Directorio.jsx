@@ -1,25 +1,23 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import CardUniversidad from "../components/CardUniversidad";
-import universidades from "../data/universidades";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
+import { useApp } from "../context/AppContext";
 
 function Directorio() {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const queryInicial = params.get("q") || "";
 
+  const { universidades, cargandoUniversidades } = useApp(); // ✅ viene del contexto, no de un import
+
   const [busqueda, setBusqueda] = useState(queryInicial);
   const [filtroTipo, setFiltroTipo] = useState("Todas");
 
   const universidadesFiltradas = universidades.filter((uni) => {
     const texto = busqueda.toLowerCase().trim();
-
-    // Filtro por tipo
     if (filtroTipo !== "Todas" && uni.tipo !== filtroTipo) return false;
-
-    // Filtro por búsqueda
     if (!texto) return true;
     const coincideNombre = uni.nombre.toLowerCase().includes(texto);
     const coincideTipo = uni.tipo.toLowerCase().includes(texto);
@@ -33,10 +31,7 @@ function Directorio() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navbar />
-
-      <main className="flex-grow px-4 py-10 max-w-6xl mx-auto w-full">
-
-        {/* Título */}
+      <main className="grow px-4 py-10 max-w-6xl mx-auto w-full">
         <h1 className="text-4xl font-bold text-center mb-2 text-blue-700">
           Directorio de Universidades
         </h1>
@@ -44,9 +39,7 @@ function Directorio() {
           Encuentra la universidad ideal para tu carrera vocacional
         </p>
 
-        {/* Barra de búsqueda + filtros */}
         <div className="flex flex-col sm:flex-row gap-3 max-w-3xl mx-auto mb-8">
-          {/* Buscador */}
           <div className="relative flex-1">
             <input
               type="text"
@@ -55,25 +48,17 @@ function Directorio() {
               placeholder="Buscar por carrera, universidad o facultad..."
               className="w-full px-5 py-3.5 pr-12 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-100 shadow-sm text-gray-800 font-medium bg-white"
             />
-            <svg
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-              fill="none" stroke="currentColor" viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            <svg className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
 
-          {/* Filtro tipo */}
           <div className="flex gap-2">
             {["Todas", "Privada", "Pública"].map(t => (
               <button
                 key={t}
                 onClick={() => setFiltroTipo(t)}
-                className={`px-4 py-2 rounded-xl text-sm font-bold transition ${filtroTipo === t
-                    ? "bg-blue-600 text-white shadow-md"
-                    : "bg-white border border-gray-200 text-slate-500 hover:bg-slate-50"
-                  }`}
+                className={`px-4 py-2 rounded-xl text-sm font-bold transition ${filtroTipo === t ? "bg-blue-600 text-white shadow-md" : "bg-white border border-gray-200 text-slate-500 hover:bg-slate-50"}`}
               >
                 {t}
               </button>
@@ -81,8 +66,10 @@ function Directorio() {
           </div>
         </div>
 
-        {/* Contador de resultados */}
-        {universidadesFiltradas.length > 0 ? (
+        {/* ✅ Estado de carga mientras llega la respuesta del backend */}
+        {cargandoUniversidades ? (
+          <p className="text-center text-gray-400 py-20">Cargando universidades...</p>
+        ) : universidadesFiltradas.length > 0 ? (
           <>
             <p className="text-center text-sm text-gray-400 mb-6">
               {universidadesFiltradas.length} universidad{universidadesFiltradas.length !== 1 ? "es" : ""}
@@ -90,7 +77,6 @@ function Directorio() {
               {busqueda ? ` para "${busqueda}"` : " encontrada" + (universidadesFiltradas.length !== 1 ? "s" : "")}
             </p>
 
-            {/* Grid de cards */}
             <div className="space-y-5">
               {universidadesFiltradas.map((uni) => (
                 <CardUniversidad

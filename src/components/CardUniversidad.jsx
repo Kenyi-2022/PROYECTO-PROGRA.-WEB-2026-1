@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
-
 function CardUniversidad({ logo, nombre, tipo, carreras, escalas, webOficial, ubicacion, costoMatricula, busqueda = "", isDark = false, isAdmin = false, onEliminarUni, onEliminarCarrera }) {
   const { user, marcarFavoritoContext } = useApp();
   const navigate = useNavigate();
