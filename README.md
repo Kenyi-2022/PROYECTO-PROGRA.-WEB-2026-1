@@ -1,30 +1,23 @@
-# VocaTest — Frontend y Backend
+# VocaTest — Frontend
 
-Proyecto web completo de VocaTest. Este repositorio contiene el frontend React/Vite y el único backend Express/Prisma utilizado por la aplicación.
-
-```text
-PROYECTO-PROGRA.-WEB-2026-1/
-├── src/                 Frontend React
-├── public/              Recursos del frontend
-├── package.json         Dependencias del frontend
-└── backend/             API Express, Prisma y PostgreSQL
-```
+Frontend React/Vite de VocaTest. El backend se mantiene por separado en [`Elielichi/Backend_VocaTest`](https://github.com/Elielichi/Backend_VocaTest).
 
 ## Ejecución local
 
-Primero inicia el backend en una terminal:
+Primero inicia el backend desde su repositorio:
 
 ```powershell
-cd backend
+cd "Backend proyecto"
 Copy-Item .env.example .env -ErrorAction SilentlyContinue
 npm.cmd install
 npm.cmd run db:generate
 npm.cmd run dev
 ```
 
-Luego inicia el frontend desde la raíz en otra terminal:
+Luego inicia este frontend en otra terminal:
 
 ```powershell
+Copy-Item .env.example .env -ErrorAction SilentlyContinue
 npm.cmd install
 npm.cmd run dev
 ```
@@ -32,38 +25,24 @@ npm.cmd run dev
 - Frontend: `http://localhost:5173`
 - Backend: `http://localhost:3000`
 - Estado del backend: `http://localhost:3000/api/health`
-- Prisma Studio local: ejecuta `npm.cmd run db:studio` dentro de `backend/` y abre `http://localhost:5555`
 
-El frontend utiliza esta variable en su `.env` local:
+Variable local del frontend:
 
 ```env
 VITE_API_URL=http://127.0.0.1:3000
 ```
 
-El backend requiere su propio `backend/.env`. Nunca publiques contraseñas, tokens ni la URL privada de PostgreSQL.
-
 ## Verificación
-
-Frontend:
 
 ```powershell
 npm.cmd run lint
 npm.cmd run build
 ```
 
-Backend:
-
-```powershell
-cd backend
-npm.cmd run db:generate
-npm.cmd run check
-npm.cmd test
-```
-
 ## Despliegue
 
-- El frontend puede desplegarse en Vercel.
-- El backend puede desplegarse como Web Service en Render usando `backend` como directorio raíz.
+- El frontend puede alojarse en Vercel.
+- El backend puede alojarse como Web Service en Render desde su repositorio independiente.
 - PostgreSQL permanece en Render.
 - En Vercel, `VITE_API_URL` debe contener la URL pública HTTPS del backend.
-- En Render, configura `DATABASE_URL`, `AUTH_SECRET`, `FRONTEND_URL`, `PGSSL` y `NODE_ENV` como variables privadas.
+- Las contraseñas y variables privadas deben configurarse en cada plataforma y nunca publicarse en GitHub.
