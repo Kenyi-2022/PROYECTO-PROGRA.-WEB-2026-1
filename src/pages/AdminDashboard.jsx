@@ -41,7 +41,10 @@ export default function AdminDashboard() {
   const [editandoId, setEditandoId] = useState(null);
   const [datosEdicion, setDatosEdicion] = useState({});
 
-  const [mostrarModalUni, setMostrarModalUni] = useState(false);
+  const [mostrarModalUni, setMostrarModalUni] = useState({
+    tipo: "",
+    texto: "",
+  });
 
   const [formUni, setFormUni] = useState(formularioUniversidadInicial);
 
@@ -240,42 +243,140 @@ export default function AdminDashboard() {
     }
   };
   const agregarCarreraAlFormulario = () => {
-    if (carreraTemp.nombre && carreraTemp.facultad) {
-      setFormUni({ ...formUni, carreras: [...formUni.carreras, carreraTemp] });
-      setCarreraTemp({ nombre: "", facultad: "", planEstudios: null });
-    } else {
-      alert("La carrera necesita al menos un nombre y una facultad.");
+    const nombreCarrera = carreraTemp.nombre.trim();
+    const facultadCarrera = carreraTemp.facultad.trim();
+
+    setMensajeUniversidad({
+      tipo: "",
+      texto: "",
+    });
+
+    if (!nombreCarrera || !facultadCarrera) {
+      setMensajeUniversidad({
+        tipo: "error",
+        texto: "La carrera necesita un nombre y una facultad.",
+      });
+      return;
     }
+
+    const carreraRepetida = formUni.carreras.some(
+      (carrera) =>
+        carrera.nombre.trim().toLowerCase() === nombreCarrera.toLowerCase(),
+    );
+
+    if (carreraRepetida) {
+      setMensajeUniversidad({
+        tipo: "error",
+        texto: "Esa carrera ya fue añadida a la lista.",
+      });
+      return;
+    }
+
+    setFormUni((formularioActual) => ({
+      ...formularioActual,
+      carreras: [
+        ...formularioActual.carreras,
+        {
+          ...carreraTemp,
+          nombre: nombreCarrera,
+          facultad: facultadCarrera,
+        },
+      ],
+    }));
+
+    setCarreraTemp({
+      nombre: "",
+      facultad: "",
+      planEstudios: null,
+    });
+
+    setMensajeUniversidad({
+      tipo: "exito",
+      texto: "Carrera añadida correctamente.",
+    });
   };
 
   const guardarUniversidad = async () => {
-    if (!formUni.nombre.trim()) {
-      alert("El nombre de la universidad es obligatorio.");
+    setMensajeUniversidad({
+      tipo: "",
+      texto: "",
+    });
+
+    const nombreUniversidad = formUni.nombre.trim();
+
+    if (!nombreUniversidad) {
+      setMensajeUniversidad({
+        tipo: "error",
+        texto: "El nombre de la universidad es obligatorio.",
+      });
+      return;
+    }
+
+    if (formUni.carreras.length === 0) {
+      setMensajeUniversidad({
+        tipo: "error",
+        texto: "Debes agregar al menos una carrera antes de guardar.",
+      });
+      return;
+    }
+
+    const universidadRepetida = universidades.some(
+      (universidad) =>
+        universidad.nombre?.trim().toLowerCase() ===
+        nombreUniversidad.toLowerCase() &&
+        Number(universidad.id) !== Number(universidadEditandoId),
+    );
+
+    if (universidadRepetida) {
+      setMensajeUniversidad({
+        tipo: "error",
+        texto: "Ya existe una universidad registrada con ese nombre.",
+      });
       return;
     }
 
     const datosUniversidad = {
       ...formUni,
-      nombre: formUni.nombre.trim(),
+      nombre: nombreUniversidad,
       tipo: formUni.tipo.trim(),
-
       ubicacion: formUni.ubicacion.trim() || null,
-
       costoMatricula: formUni.costoMatricula.trim() || null,
-
       webOficial: formUni.webOficial.trim() || null,
     };
 
-    const resultado = universidadEditandoId
-      ? await editarUniversidad(universidadEditandoId, datosUniversidad)
-      : await agregarUniversidad(datosUniversidad);
+    try {
+      const resultado = universidadEditandoId
+        ? await editarUniversidad(universidadEditandoId, datosUniversidad)
+        : await agregarUniversidad(datosUniversidad);
 
-    if (!resultado.ok) {
-      alert(resultado.mensaje);
-      return;
+      if (!resultado?.ok) {
+        setMensajeUniversidad({
+          tipo: "error",
+          texto:
+            resultado?.mensaje ||
+            "No fue posible guardar la universidad. Revisa los datos ingresados.",
+        });
+        return;
+      }
+
+      setMensajeUniversidad({
+        tipo: "exito",
+        texto: universidadEditandoId
+          ? "Universidad actualizada correctamente."
+          : "Universidad registrada correctamente.",
+      });
+
+      setTimeout(() => {
+        cerrarModalUniversidad();
+      }, 1000);
+    } catch (error) {
+      console.error("Error guardando universidad:", error);
+
+      setMensajeUniversidad({
+        tipo: "error",
+        texto: "Ocurrió un error inesperado al guardar la universidad.",
+      });
     }
-
-    cerrarModalUniversidad();
   };
 
   const abrirModalCrearUniversidad = () => {
@@ -290,6 +391,11 @@ export default function AdminDashboard() {
       nombre: "",
       facultad: "",
       planEstudios: null,
+    });
+
+    setMensajeUniversidad({
+      tipo: "",
+      texto: "",
     });
 
     setMostrarModalUni(true);
@@ -315,6 +421,11 @@ export default function AdminDashboard() {
       planEstudios: null,
     });
 
+    setMensajeUniversidad({
+      tipo: "",
+      texto: "",
+    });
+
     setMostrarModalUni(true);
   };
 
@@ -331,6 +442,11 @@ export default function AdminDashboard() {
       nombre: "",
       facultad: "",
       planEstudios: null,
+    });
+
+    setMensajeUniversidad({
+      tipo: "",
+      texto: "",
     });
   };
 
@@ -987,6 +1103,20 @@ export default function AdminDashboard() {
                 ? "Editar Institución"
                 : "Registrar Institución"}
             </h2>
+
+            {mensajeUniversidad.texto && (
+              <div
+                role="alert"
+                aria-live="polite"
+                className={`mb-5 rounded-xl border px-4 py-3 text-sm font-semibold ${mensajeUniversidad.tipo === "error"
+                  ? "border-red-500/40 bg-red-500/10 text-red-300"
+                  : "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
+                  }`}
+              >
+                {mensajeUniversidad.texto}
+              </div>
+            )}
+
             <div className="space-y-4 mb-6 pb-6 border-b border-slate-800">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -1113,17 +1243,6 @@ export default function AdminDashboard() {
                     </span>
                   </div>
                 )}
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-400 mb-1">
-                  Subir Logo (Archivo PNG/JPG)
-                </label>
-                <input
-                  type="file"
-                  accept="image/png, image/jpeg"
-                  onChange={procesarLogoBase64}
-                  className="w-full text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer"
-                />
               </div>
             </div>
             <h3 className="text-lg font-bold text-indigo-400 mb-4">
