@@ -1,39 +1,39 @@
-# VocaTest — Full Stack
+# VocaTest — Frontend
 
-Monorepo del proyecto VocaTest. Incluye el frontend React/Vite y el backend
-Express/Prisma conectado a PostgreSQL.
+Aplicación React/Vite de VocaTest. El backend oficial se mantiene por separado
+en `..\backend-repo\Backend proyecto` y se consume mediante HTTP.
 
 ```text
-VocaTest/
-├── backend/       API REST, Prisma y pruebas
-├── public/        logos y mallas universitarias
-├── src/           frontend React
-└── package.json   comandos principales
+Programación Web - Proyecto Final/
+├── frontend/                       React/Vite
+└── backend-repo/Backend proyecto/  Express, Prisma y PostgreSQL
 ```
 
 ## Ejecución local
 
+Primero inicia el backend en una terminal:
+
 ```powershell
-Copy-Item .env.example .env
-npm.cmd ci
-npm.cmd ci --prefix backend
+cd "..\backend-repo\Backend proyecto"
+npm.cmd install
+npx.cmd prisma generate
 npm.cmd run dev
 ```
 
-En otra terminal:
+Luego inicia el frontend en otra terminal:
 
 ```powershell
-npm.cmd run start:backend
+cd "..\..\frontend"
+Copy-Item .env.example .env -ErrorAction SilentlyContinue
+npm.cmd install
+npm.cmd run dev
 ```
-
-También se pueden iniciar ambos servidores desde VS Code con `Ctrl+Shift+B` y
-la tarea `VocaTest: Iniciar frontend y backend`.
 
 - Frontend: `http://localhost:5173`
 - Backend: `http://localhost:3000`
 - Estado de PostgreSQL: `http://localhost:3000/api/health`
 
-Variables:
+Variable local del frontend:
 
 ```env
 VITE_API_URL=http://127.0.0.1:3000
@@ -41,17 +41,26 @@ VITE_API_URL=http://127.0.0.1:3000
 
 ## Verificación
 
+Frontend:
+
 ```powershell
 npm.cmd run lint
 npm.cmd run build
-npm.cmd run check:backend
-npm.cmd run test:backend
 ```
 
-## Despliegue en Vercel
+Backend:
 
-- Framework preset: `Vite`.
-- Build command: `npm run build`.
-- Output directory: `dist`.
-- Variable `VITE_API_URL`: URL pública HTTPS del backend en Render.
-- `vercel.json` contiene el rewrite necesario para React Router.
+```powershell
+cd "..\backend-repo\Backend proyecto"
+npm.cmd run check
+npm.cmd test
+```
+
+## Despliegue
+
+- Vercel aloja el frontend (`frontend`).
+- Render aloja el backend (`backend-repo/Backend proyecto`).
+- PostgreSQL permanece en Render.
+- En Vercel, `VITE_API_URL` debe contener la URL pública HTTPS del backend.
+- En el backend desplegado, `DATABASE_URL` debe usar la conexión interna de
+  PostgreSQL cuando ambos servicios estén en la misma cuenta y región de Render.

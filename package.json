@@ -1,18 +1,13 @@
 {
-  "name": "vocatest-fullstack",
+  "name": "vocatest-frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "dev:frontend": "vite",
-    "dev:backend": "npm --prefix backend run dev",
-    "start:backend": "npm --prefix backend start",
-    "build": "vite build",
+    "dev": "vite --configLoader runner",
+    "build": "vite build --configLoader runner",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "test:backend": "npm --prefix backend test",
-    "check:backend": "npm --prefix backend run check"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.0",
