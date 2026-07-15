@@ -1,12 +1,13 @@
-# VocaTest — Frontend
+# VocaTest — Frontend y Backend
 
-Aplicación React/Vite de VocaTest. El backend oficial se mantiene por separado
-en `..\backend-repo\Backend proyecto` y se consume mediante HTTP.
+Proyecto web completo de VocaTest. Este repositorio contiene el frontend React/Vite y el único backend Express/Prisma utilizado por la aplicación.
 
 ```text
-Programación Web - Proyecto Final/
-├── frontend/                       React/Vite
-└── backend-repo/Backend proyecto/  Express, Prisma y PostgreSQL
+PROYECTO-PROGRA.-WEB-2026-1/
+├── src/                 Frontend React
+├── public/              Recursos del frontend
+├── package.json         Dependencias del frontend
+└── backend/             API Express, Prisma y PostgreSQL
 ```
 
 ## Ejecución local
@@ -14,30 +15,32 @@ Programación Web - Proyecto Final/
 Primero inicia el backend en una terminal:
 
 ```powershell
-cd "..\backend-repo\Backend proyecto"
+cd backend
+Copy-Item .env.example .env -ErrorAction SilentlyContinue
 npm.cmd install
-npx.cmd prisma generate
+npm.cmd run db:generate
 npm.cmd run dev
 ```
 
-Luego inicia el frontend en otra terminal:
+Luego inicia el frontend desde la raíz en otra terminal:
 
 ```powershell
-cd "..\..\frontend"
-Copy-Item .env.example .env -ErrorAction SilentlyContinue
 npm.cmd install
 npm.cmd run dev
 ```
 
 - Frontend: `http://localhost:5173`
 - Backend: `http://localhost:3000`
-- Estado de PostgreSQL: `http://localhost:3000/api/health`
+- Estado del backend: `http://localhost:3000/api/health`
+- Prisma Studio local: ejecuta `npm.cmd run db:studio` dentro de `backend/` y abre `http://localhost:5555`
 
-Variable local del frontend:
+El frontend utiliza esta variable en su `.env` local:
 
 ```env
 VITE_API_URL=http://127.0.0.1:3000
 ```
+
+El backend requiere su propio `backend/.env`. Nunca publiques contraseñas, tokens ni la URL privada de PostgreSQL.
 
 ## Verificación
 
@@ -51,16 +54,16 @@ npm.cmd run build
 Backend:
 
 ```powershell
-cd "..\backend-repo\Backend proyecto"
+cd backend
+npm.cmd run db:generate
 npm.cmd run check
 npm.cmd test
 ```
 
 ## Despliegue
 
-- Vercel aloja el frontend (`frontend`).
-- Render aloja el backend (`backend-repo/Backend proyecto`).
+- El frontend puede desplegarse en Vercel.
+- El backend puede desplegarse como Web Service en Render usando `backend` como directorio raíz.
 - PostgreSQL permanece en Render.
 - En Vercel, `VITE_API_URL` debe contener la URL pública HTTPS del backend.
-- En el backend desplegado, `DATABASE_URL` debe usar la conexión interna de
-  PostgreSQL cuando ambos servicios estén en la misma cuenta y región de Render.
+- En Render, configura `DATABASE_URL`, `AUTH_SECRET`, `FRONTEND_URL`, `PGSSL` y `NODE_ENV` como variables privadas.
